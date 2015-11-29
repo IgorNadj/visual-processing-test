@@ -9,7 +9,7 @@ class ImageSessionSet extends React.Component {
 		super(props);
 		this.state = {};
 
-		this.getInitialState = this.getInitialState.bind(this);
+		this._initState = this._initState.bind(this);
 		this.done = this.done.bind(this);
 		this.next = this.next.bind(this);
 		this.hasNext = this.hasNext.bind(this);
@@ -17,14 +17,14 @@ class ImageSessionSet extends React.Component {
 		this.getCurrentSessionImage = this.getCurrentSessionImage.bind(this);
 		this.getCurrentImageIndex = this.getCurrentImageIndex.bind(this);
 		
-		this.state = this.getInitialState(props);
+		this.state = this._initState(props);
 	}
 
 	componentWillReceiveProps(nextProps){
-		this.setState(this.getInitialState(nextProps));
+		this.setState(this._initState(nextProps));
 	}
 
-	getInitialState(props){
+	_initState(props){
 		var numImages = Util.objLength(props.sessionImages);
 		var order = Util.getUniqueRandomNumbers(numImages, 0, numImages-1);
 		return {

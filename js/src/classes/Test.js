@@ -12,7 +12,7 @@ class Test extends ImageSessionSet {
 
 	answer(answeredYes){
 		console.log('answer', answeredYes);
-		var sessionImage = this.getCurrentSessionImage();
+		var sessionImage = this.getCurrentSessionImage();		
 		this.answers[sessionImage.imageSet.id] = answeredYes;
 		this.next();
 	}

@@ -8,6 +8,43 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var Done = (function (_React$Component) {
+	_inherits(Done, _React$Component);
+
+	function Done() {
+		_classCallCheck(this, Done);
+
+		return _possibleConstructorReturn(this, Object.getPrototypeOf(Done).apply(this, arguments));
+	}
+
+	_createClass(Done, [{
+		key: 'render',
+		value: function render() {
+			return React.createElement(
+				'div',
+				{ style: { padding: '3em' } },
+				React.createElement(
+					'h2',
+					null,
+					'Done'
+				),
+				'Thanks'
+			);
+		}
+	}]);
+
+	return Done;
+})(React.Component);
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 /**
   * An ImageSessionSet is a common base class for dealing with sessionImages
   */
@@ -22,7 +59,7 @@ var ImageSessionSet = (function (_React$Component) {
 
 		_this.state = {};
 
-		_this.getInitialState = _this.getInitialState.bind(_this);
+		_this._initState = _this._initState.bind(_this);
 		_this.done = _this.done.bind(_this);
 		_this.next = _this.next.bind(_this);
 		_this.hasNext = _this.hasNext.bind(_this);
@@ -30,18 +67,18 @@ var ImageSessionSet = (function (_React$Component) {
 		_this.getCurrentSessionImage = _this.getCurrentSessionImage.bind(_this);
 		_this.getCurrentImageIndex = _this.getCurrentImageIndex.bind(_this);
 
-		_this.state = _this.getInitialState(props);
+		_this.state = _this._initState(props);
 		return _this;
 	}
 
 	_createClass(ImageSessionSet, [{
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			this.setState(this.getInitialState(nextProps));
+			this.setState(this._initState(nextProps));
 		}
 	}, {
-		key: 'getInitialState',
-		value: function getInitialState(props) {
+		key: '_initState',
+		value: function _initState(props) {
 			var numImages = Util.objLength(props.sessionImages);
 			var order = Util.getUniqueRandomNumbers(numImages, 0, numImages - 1);
 			return {
@@ -811,7 +848,9 @@ var VisualProcessingTest = (function (_React$Component) {
 		key: 'nextSession',
 		value: function nextSession() {
 			var nextSessionIndex = this.state.currentSessionIndex + 1;
-			if (nextSessionIndex >= this.state.numSessions) {} else {
+			if (nextSessionIndex >= this.state.numSessions) {
+				this.allSessionsDone();
+			} else {
 				this.setState({ currentSessionIndex: nextSessionIndex });
 				this.setState({ myState: 'beforeBlock-instructions' });
 			}
@@ -851,7 +890,12 @@ var VisualProcessingTest = (function (_React$Component) {
 		key: 'afterBlockDone',
 		value: function afterBlockDone(answers) {
 			this._markSessionAnswers('after', answers);
-			this.setState({ myState: 'done' });
+			this.nextSession();
+		}
+	}, {
+		key: 'allSessionsDone',
+		value: function allSessionsDone() {
+			this.setState({ myState: 'allSessionsDone' });
 		}
 	}, {
 		key: 'render',
@@ -869,6 +913,9 @@ var VisualProcessingTest = (function (_React$Component) {
 				if (s == 'afterBlock-instructions') onStart = this.afterBlockStart;
 				inner = React.createElement(Instructions, { myState: s, start: onStart });
 			}
+			if (s == 'allSessionsDone') {
+				inner = React.createElement(Done, null);
+			}
 			if (s == 'beforeBlock' || s == 'afterBlock') {
 				var onDone;
 				if (s == 'beforeBlock') onDone = this.beforeBlockDone;
@@ -877,13 +924,6 @@ var VisualProcessingTest = (function (_React$Component) {
 			}
 			if (s == 'prime') {
 				return React.createElement(Prime, { sessionImages: this.getCurrentSessionImages(), done: this.primeDone });
-			}
-			if (s == 'done') {
-				inner = React.createElement(
-					'div',
-					null,
-					'done'
-				);
 			}
 			return React.createElement(
 				'div',
