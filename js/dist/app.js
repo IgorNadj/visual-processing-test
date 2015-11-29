@@ -147,13 +147,31 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Instructions = (function (_React$Component) {
 	_inherits(Instructions, _React$Component);
 
-	function Instructions() {
+	function Instructions(props) {
 		_classCallCheck(this, Instructions);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Instructions).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Instructions).call(this, props));
+
+		_this.start = _this.start.bind(_this);
+		return _this;
 	}
 
 	_createClass(Instructions, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			key('space', this.start);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			key.unbind('space');
+		}
+	}, {
+		key: 'start',
+		value: function start() {
+			this.props.start();
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			console.log('instructions', this.props);
@@ -168,7 +186,7 @@ var Instructions = (function (_React$Component) {
 			);
 
 			var content = null;
-			var startButtonLabel = 'Start';
+			var startButtonLabel = 'Start (spacebar)';
 			if (this.props.myState == 'first-instructions') {
 				// first instruction, special
 				startButtonLabel = 'Continue';
@@ -406,7 +424,7 @@ var Instructions = (function (_React$Component) {
 					{ style: { padding: '2em', textAlign: 'center' } },
 					React.createElement(
 						'a',
-						{ href: '#', onClick: this.props.start, style: { padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' } },
+						{ href: '#', onClick: this.start, style: { padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' } },
 						startButtonLabel
 					)
 				)
@@ -762,6 +780,18 @@ var TestPhoto = (function (_React$Component) {
 			setTimeout(this.show, 0);
 		}
 	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			key('y', this.answerYes);
+			key('n', this.answerNo);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			key.unbind('y');
+			key.unbind('n');
+		}
+	}, {
 		key: 'show',
 		value: function show() {
 			this.setState({ myState: 'show' });
@@ -840,12 +870,12 @@ var TestPhoto = (function (_React$Component) {
 							React.createElement(
 								'button',
 								{ onClick: this.answerYes, style: { margin: '1em' } },
-								'Yes'
+								'Yes (y)'
 							),
 							React.createElement(
 								'button',
 								{ onClick: this.answerNo, style: { margin: '1em' } },
-								'No'
+								'No (n)'
 							)
 						)
 					)

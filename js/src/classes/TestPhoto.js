@@ -28,6 +28,14 @@ class TestPhoto extends React.Component {
 		this.setState({ times: { init: new Date() } });
 		setTimeout(this.show, 0);
 	}
+	componentDidMount(){
+		key('y', this.answerYes);
+		key('n', this.answerNo);	
+	}
+	componentWillUnmount(){
+		key.unbind('y');
+		key.unbind('n');	
+	}
 
 	show(){		
 		this.setState({ myState: 'show' });
@@ -86,8 +94,8 @@ class TestPhoto extends React.Component {
 				<div style={{ textAlign: 'center', padding: '280px 3em', }}>
 					<strong>Did you see a person in the photo?</strong>
 					<div style={{ padding: '1em' }}>
-						<button onClick={this.answerYes} style={{ margin: '1em' }}>Yes</button>
-						<button onClick={this.answerNo} style={{ margin: '1em' }}>No</button>
+						<button onClick={this.answerYes} style={{ margin: '1em' }}>Yes (y)</button>
+						<button onClick={this.answerNo} style={{ margin: '1em' }}>No (n)</button>
 					</div>
 				</div>
 			</div>

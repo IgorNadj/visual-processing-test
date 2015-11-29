@@ -2,6 +2,24 @@
 
 class Instructions extends React.Component {
 
+	constructor(props){
+		super(props);
+
+		this.start = this.start.bind(this);
+	}
+
+	componentDidMount(){
+		key('space', this.start);
+	}
+	componentWillUnmount(){
+		key.unbind('space');
+	}
+
+	start(){
+		this.props.start();
+	}
+	
+
 	render(){
 		console.log('instructions', this.props);
 
@@ -10,7 +28,7 @@ class Instructions extends React.Component {
 		</div>
 
 		var content = null;
-		var startButtonLabel = 'Start';
+		var startButtonLabel = 'Start (spacebar)';
 		if(this.props.myState == 'first-instructions'){
 			// first instruction, special
 			startButtonLabel = 'Continue';
@@ -93,7 +111,7 @@ class Instructions extends React.Component {
 				{ content }
 			</div>
 			<p style={{ padding: '2em', textAlign: 'center' }}>
-				<a href="#" onClick={this.props.start} style={{ padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' }}>{ startButtonLabel }</a>
+				<a href="#" onClick={this.start} style={{ padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' }}>{ startButtonLabel }</a>
 			</p>
 		</div> 
 	}
