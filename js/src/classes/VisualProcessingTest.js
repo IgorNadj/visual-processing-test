@@ -13,7 +13,7 @@ class VisualProcessingTest extends React.Component {
 	    	numSessions: 4
 	    };
 
-	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'loadingDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
+	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
 	    for(var i in reactMethods){
 	    	var m = reactMethods[i];
 	    	this[m] = this[m].bind(this);
@@ -38,12 +38,13 @@ class VisualProcessingTest extends React.Component {
 		}
 		console.log('imageSetsArr', imageSetsArr);
 		var imageSetsNeeded = this.state.numSessions * this.state.sessionSize;
+		var order = Util.getUniqueRandomNumbers(imageSetsNeeded, 0, imageSetsNeeded-1);
 		var c = 0;
 		for(var i = 0; i < this.state.numSessions; i++){
 			var session = [];
 			for(var j = 0; j < this.state.sessionSize; j++){
 				var o = {
-					imageSet: imageSetsArr[c],
+					imageSet: imageSetsArr[order[c]],
 					showControl: Math.random() > 0.5, // 50% chance of getting a control, 50% of a test image
 					beforeTestAnswer: null,
 					afterTestAnswer: null
@@ -80,6 +81,17 @@ class VisualProcessingTest extends React.Component {
 	getCurrentSessionImages(){
 		return this.state.sessions[this.state.currentSessionIndex];
 	}
+
+	nextSession(){
+		var nextSessionIndex = this.state.currentSessionIndex + 1;
+		if(nextSessionIndex >= this.state.numSessions){
+			this.allSessionsDone();
+		}else{
+			this.setState({ currentSessionIndex: nextSessionIndex });
+			this.setState({ myState: 'beforeBlock-instructions' });
+		}
+
+	}
 	
 
 	loadingDone(){
@@ -103,7 +115,10 @@ class VisualProcessingTest extends React.Component {
 	}
 	afterBlockDone(answers){
 		this._markSessionAnswers('after', answers);
-		this.setState({ myState: 'done' });
+		this.nextSession();
+	}
+	allSessionsDone(){
+		this.setState({ myState: 'allSessionsDone' });
 	}
 
     render(){
@@ -120,6 +135,9 @@ class VisualProcessingTest extends React.Component {
     		if(s == 'afterBlock-instructions')  onStart = this.afterBlockStart;
     		inner = <Instructions myState={s} start={onStart} />
     	}
+    	if(s == 'allSessionsDone'){
+    		inner = <Done />
+    	}
     	if(s == 'beforeBlock' || s == 'afterBlock'){
     		var onDone;
     		if(s == 'beforeBlock') onDone = this.beforeBlockDone;
@@ -128,9 +146,6 @@ class VisualProcessingTest extends React.Component {
     	}
     	if(s == 'prime'){
     		return <Prime sessionImages={this.getCurrentSessionImages()} done={this.primeDone} />
-    	}
-    	if(s == 'done'){
-    		inner = <div>done</div>
     	}
         return <div style={{ width: '800px', height: '600px', background: 'white' }}>
         	{inner}
