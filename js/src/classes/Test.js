@@ -1,64 +1,37 @@
 
 
-class Test extends React.Component {
+class Test extends ImageSessionSet {
 
 	constructor(props){
 		super(props);
-		this.state = {
-			images: props.images,
-			currentImageIndex: 0,
-			answers: {}
-		};
-		
-		this.next = this.next.bind(this);
-		this.getImageAtIndex = this.getImageAtIndex.bind(this);
+		this.answers = {};
+
+		this.answer = this.answer.bind(this);
+		this.getCurrentImageSrc = this.getCurrentImageSrc.bind(this);
 	}
 
-	next(answeredYes){
-		// TODO: randomise order
-		console.log('next', answeredYes);
+	answer(answeredYes){
+		console.log('answer', answeredYes);
+		var sessionImage = this.getCurrentSessionImage();
+		this.answers[sessionImage.imageSet.id] = answeredYes;
+		this.next();
+	}
 
-		var curIndex = this.state.currentImageIndex;
+	done(){
+		this.props.done(this.answers);
+	}
 
-		var answers = this.state.answers;
-		answers[curIndex] = answeredYes;
-		this.setState({ answers: answers });
-
-		var nextIndex = curIndex + 1;
-
-		var numImages = Object.keys(this.state.images).length;
-
-		// console.log('Test::next', this, this.state.images.length, nextIndex);
-		if(nextIndex >= numImages){
-			// finished
-			console.log('test done, shipping answers');
-			this.props.done(this.state.answers);
-
+	getCurrentImageSrc(){
+		var sessionImage = this.getCurrentSessionImage();
+		if(sessionImage.showControl){
+			return sessionImage.imageSet.control;
 		}else{
-			console.log('going to next stimuli', nextIndex);
-			this.setState({ currentImageIndex: nextIndex });
+			return sessionImage.imageSet.test;
 		}
-	}
-
-
-
-	getImageAtIndex(index){
-		var image = null;
-		var count = 0;
-		var type = 'stimuli'; // tests always use stimuli type
-		for(var filename in this.state.images){
-			if(count == index){
-				image = this.state.images[filename][type];
-				break;
-			}
-			count++;
-		}
-		return image;
 	}
 
 	render(){
-		var image = this.getImageAtIndex(this.state.currentImageIndex);
-		return <TestPhoto imageSrc={image.src} done={this.next} /> 
+		return <TestPhoto imageSrc={this.getCurrentImageSrc()} done={this.answer} /> 
 	}
 
 }

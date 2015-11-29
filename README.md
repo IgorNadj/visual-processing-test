@@ -1,10 +1,10 @@
 templates (colour) (40 minimum)
- - people
- - animals
+ - people (20)
+ - animals (20)
 
-stimuli (two tone / black and white) (80 minimum - generated 40x2)
- - test
- - control
+stimuli (two tone / black and white) (80 minimum)
+ - test (40 (20+20 people + animals))
+ - control (40 (20+20 nothing))
 
 Generation:
  - the templates generate both the test and control images (each template image generates one test image and one control image). 
@@ -13,7 +13,7 @@ Generation:
 
 
 Test process:
-Each test consists of 16 sessions!! <-- cut this down to 4?
+Each test consists of 16 sessions!! <-- we cut this down to 4 (4 max, we have 40 templates without repetition)
 
 One session consistes of:
 1. before block (test)

@@ -22,4 +22,8 @@ class Util {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
+	static objLength(obj){
+		return Object.keys(obj).length;
+	}
+
 }

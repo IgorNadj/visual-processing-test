@@ -1,6 +1,7 @@
 
+var res = new Resources(window.VPT_IMAGES);
 
 ReactDOM.render(
-	<VisualProcessingTest res={window.VPT_IMAGES} />,
+	<VisualProcessingTest res={res} />,
     document.getElementById('app')
 );

@@ -4,117 +4,92 @@ class VisualProcessingTest extends React.Component {
 
 	constructor(props){
 	    super(props);
-	    this.state = { myState: 'loading', images: {}, answers: {} };
-	    this.loadResources(props.res);
+	    this.state = { 
+	    	myState: 'loading', 
+	    	res: props.res, 
+	    	sessions: [],
+	    	currentSessionIndex: 0,
+	    	sessionSize: 3,
+	    	numSessions: 4
+	    };
 
-	    this.beforeTestStart = this.beforeTestStart.bind(this); 
-	    this.beforeTestDone = this.beforeTestDone.bind(this);
-	    this.beforePrimeStart = this.beforePrimeStart.bind(this);
+	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'loadingDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
+	    for(var i in reactMethods){
+	    	var m = reactMethods[i];
+	    	this[m] = this[m].bind(this);
+	    }
 
-	   
+	    setTimeout(this._init, 0);
 	}
 
-	getImageTypes(){
-		return ['templates', 'stimuli'];
-	}
+	_init(){
+		console.log('res: ', this.state.res);
 
-	getImageCategories(){
-		return ['people', 'animals'];
-	}
-
-	loadResources(res){
-		var self = this;
-		if(!res) throw 'Param res required, containing image resource object';
-
-		// 1. pick subset
-		var res = this.getRandomImageSubset(res, 10);
-
-		// 2. load
-		var images = {};
-
-		var loadQueue = [];
-		var types = this.getImageTypes();
-		var categories = this.getImageCategories();
-		for(var i in types){
-			var type = types[i];
-			for(var j in categories){
-				var category = categories[j];
-				for(var k in res[type][category]){
-					var filename = res[type][category][k];
-					loadQueue.push({
-						filename: filename,
-						type: type,
-						category: category,
-						src: 'res/images/'+type+'/'+category+'/'+filename
-					})
+		// split image sets into 4 sessions, randomly distributed
+		var sessions = [];
+		var imageSets = this.state.res.getItems();
+		var imageSetsArr = [];
+		for(var key in imageSets){
+			if(imageSets.hasOwnProperty(key)){
+				var o = imageSets[key];
+				o.id = key;
+				imageSetsArr.push(o);
+			}
+		}
+		console.log('imageSetsArr', imageSetsArr);
+		var imageSetsNeeded = this.state.numSessions * this.state.sessionSize;
+		var c = 0;
+		for(var i = 0; i < this.state.numSessions; i++){
+			var session = [];
+			for(var j = 0; j < this.state.sessionSize; j++){
+				var o = {
+					imageSet: imageSetsArr[c],
+					showControl: Math.random() > 0.5, // 50% chance of getting a control, 50% of a test image
+					beforeTestAnswer: null,
+					afterTestAnswer: null
 				}
+				session.push(o);
+				c++;
 			}
+			sessions.push(session);
 		}
+		this.setState({ sessions: sessions });
+		console.log('sessions', sessions);
 
-		var onAllLoaded = function(){
-			console.log('all loaded', images);
-			self.setState({ images: images });
-			self.loadingDone();
-		};
-
-		var loadNext = function(){
-			console.log('loadnext');
-			if(loadQueue.length === 0){
-				onAllLoaded();
-				return;
-			}
-			var item = loadQueue.pop();
-
-			var image = new Image();
-			image.onload = function(){
-				if(!images[item.filename]) images[item.filename] = {};
-				images[item.filename][item.type] = image;
-				images[item.filename].category = item.category;
-				loadNext();
-			};
-			image.src = item.src;
-		};
-
-		// also need to load noise, do that first, then load everything else
-		var noiseImage = new Image();
-		noiseImage.onload = loadNext;
-		noiseImage.src = 'res/images/noise.jpg';
+		// load images
+		this.state.res.load(this.loadingDone);
 	}
 
-	getRandomImageSubset(res, num){
-		var subset = {
-			templates: {
-				people: [],
-				animals: []
-			},
-			stimuli: {
-				people: [],
-				animals: []
-			}
-		};
-		var categories = this.getImageCategories();
-		for(var i in categories){
-			var category = categories[i];
-			var randomIndices = Util.getUniqueRandomNumbers(num, 0, res.templates[category].length - 1);
-			for(var j in randomIndices){
-				var randomIndex = randomIndices[j];
-				subset.templates[category].push(res.templates[category][randomIndex]);
-				subset.stimuli[category].push(res.stimuli[category][randomIndex]);
-			}
+	_markSessionAnswers(whichTest, answers){
+		var answerKey;
+		if(whichTest == 'before'){
+			answerKey = 'beforeTestAnswer';
+		}else{
+			answerKey = 'afterTestAnswer';
 		}
-
-		console.log('subset', subset);
-
-		return subset;
+		var sessions = this.state.sessions;
+		var session = sessions[this.state.currentSessionIndex];
+		for(var i in session){
+			var sessionImage = session[i];
+			sessions[this.state.currentSessionIndex][i][answerKey] = answers[sessionImage.imageSet.id];
+		}
+		console.log('sessions updated:', sessions);
+		this.setState({ sessions: sessions });
 	}
+
+	getCurrentSessionImages(){
+		return this.state.sessions[this.state.currentSessionIndex];
+	}
+	
 
 	loadingDone(){
-		self.setState({ myState: 'beforeBlock-instructions' });
+		this.setState({ myState: 'beforeBlock-instructions' });
 	}
 	beforeBlockStart(){
 		this.setState({ myState: 'beforeBlock' });
 	}
 	beforeBlockDone(answers){
+		this._markSessionAnswers('before', answers);
 		this.setState({ myState: 'prime-instructions' });
 	}
 	primeStart(){
@@ -127,6 +102,7 @@ class VisualProcessingTest extends React.Component {
 		this.setState({ myState: 'afterBlock' });
 	}
 	afterBlockDone(answers){
+		this._markSessionAnswers('after', answers);
 		this.setState({ myState: 'done' });
 	}
 
@@ -148,10 +124,10 @@ class VisualProcessingTest extends React.Component {
     		var onDone;
     		if(s == 'beforeBlock') onDone = this.beforeBlockDone;
     		if(s == 'afterBlock')  onDone = this.afterBlockDone;
-    		inner = <Test images={this.state.images} done={onDone} />
+    		inner = <Test sessionImages={this.getCurrentSessionImages()} done={onDone} />
     	}
     	if(s == 'prime'){
-    		return <Prime images={this.state.images} done={this.primeDone} />
+    		return <Prime sessionImages={this.getCurrentSessionImages()} done={this.primeDone} />
     	}
     	if(s == 'done'){
     		inner = <div>done</div>
