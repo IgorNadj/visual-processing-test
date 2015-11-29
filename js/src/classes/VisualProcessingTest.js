@@ -47,7 +47,8 @@ class VisualProcessingTest extends React.Component {
 					imageSet: imageSetsArr[order[c]],
 					showControl: Math.random() > 0.5, // 50% chance of getting a control, 50% of a test image
 					beforeTestAnswer: null,
-					afterTestAnswer: null
+					afterTestAnswer: null,
+					timings: {}
 				}
 				session.push(o);
 				c++;
@@ -61,7 +62,7 @@ class VisualProcessingTest extends React.Component {
 		this.state.res.load(this.loadingDone);
 	}
 
-	_markSessionAnswers(whichTest, answers){
+	_markSessionAnswers(whichTest, answers, timings){
 		var answerKey;
 		if(whichTest == 'before'){
 			answerKey = 'beforeTestAnswer';
@@ -73,6 +74,7 @@ class VisualProcessingTest extends React.Component {
 		for(var i in session){
 			var sessionImage = session[i];
 			sessions[this.state.currentSessionIndex][i][answerKey] = answers[sessionImage.imageSet.id];
+			sessions[this.state.currentSessionIndex][i].timings = timings[sessionImage.imageSet.id];
 		}
 		console.log('sessions updated:', sessions);
 		this.setState({ sessions: sessions });
@@ -103,8 +105,8 @@ class VisualProcessingTest extends React.Component {
 	beforeBlockStart(){
 		this.setState({ myState: 'beforeBlock' });
 	}
-	beforeBlockDone(answers){
-		this._markSessionAnswers('before', answers);
+	beforeBlockDone(answers, timings){
+		this._markSessionAnswers('before', answers, timings);
 		this.setState({ myState: 'prime-instructions' });
 	}
 	primeStart(){
@@ -116,8 +118,8 @@ class VisualProcessingTest extends React.Component {
 	afterBlockStart(){
 		this.setState({ myState: 'afterBlock' });
 	}
-	afterBlockDone(answers){
-		this._markSessionAnswers('after', answers);
+	afterBlockDone(answers, timings){
+		this._markSessionAnswers('after', answers, timings);
 		this.nextSession();
 	}
 	allSessionsDone(){

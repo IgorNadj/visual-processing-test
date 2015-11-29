@@ -17,16 +17,20 @@ class TestPhoto extends React.Component {
 		this.addTime = this.addTime.bind(this);
 		this.answerYes = this.answerYes.bind(this);
 		this.answerNo = this.answerNo.bind(this);
+		this.getTimings = this.getTimings.bind(this);
 
-		// cant setState yet... so have to do a setTimeout 0 here
-		setTimeout(this.show, 0);
+		setTimeout(this.show, 0); // TODO: do this a less hacky way
 	}
 
-	componentWillReceiveProps(){
-		console.log('componentWillReceiveProps');
-		this.setState({ myState: 'loading' });
-		this.setState({ times: { init: new Date() } });
-		setTimeout(this.show, 0);
+	componentWillReceiveProps(nextProps){
+		// TODO: DRY
+		this.setState({
+			myState: 'loading',
+			times: { 
+				init: new Date() 
+			}
+		});
+		setTimeout(this.show, 0); // TODO: do this a less hacky way
 	}
 	componentDidMount(){
 		key('y', this.answerYes);
@@ -40,21 +44,18 @@ class TestPhoto extends React.Component {
 	show(){		
 		this.setState({ myState: 'show' });
 		this.addTime('show');
-		this.forceUpdate();	
 		setTimeout(this.noise, 400);	
 	}
 
 	noise(){
 		this.setState({ myState: 'noise' });
 		this.addTime('noise');
-		this.forceUpdate();
 		setTimeout(this.answer, 100);
 	}
 
 	answer(){
 		this.setState({ myState: 'answer' });
 		this.addTime('answer');
-		this.forceUpdate();
 
 		console.log('init took: '+ this.getTimeDiff(this.state.times.init, this.state.times.show));
 		console.log('show took: '+ this.getTimeDiff(this.state.times.show, this.state.times.noise));
@@ -71,14 +72,25 @@ class TestPhoto extends React.Component {
 		return b.getTime() - a.getTime();
 	}
 
+	getTimings(){
+		return {
+			initialising: this.getTimeDiff(this.state.times.init, this.state.times.show),
+			showing: this.getTimeDiff(this.state.times.init, this.state.times.noise),
+			noising: this.getTimeDiff(this.state.times.noise, this.state.times.answer),
+			answering: this.getTimeDiff(this.state.times.answer, this.state.times.done),
+		}
+	}
+
 	answerYes(){
 		console.log('yes');
-		this.props.done(true);
+		this.addTime('done');
+		this.props.done(true, this.getTimings());
 	}
 
 	answerNo(){
 		console.log('no');
-		this.props.done(false);
+		this.addTime('done');
+		this.props.done(false, this.getTimings());
 	}
 
 	render(){

@@ -696,6 +696,7 @@ var Test = (function (_ImageSessionSet) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Test).call(this, props));
 
 		_this.answers = {};
+		_this.timings = {};
 
 		_this.answer = _this.answer.bind(_this);
 		_this.getCurrentImageSrc = _this.getCurrentImageSrc.bind(_this);
@@ -704,16 +705,17 @@ var Test = (function (_ImageSessionSet) {
 
 	_createClass(Test, [{
 		key: 'answer',
-		value: function answer(answeredYes) {
-			console.log('answer', answeredYes);
+		value: function answer(answeredYes, timings) {
+			console.log('answer', answeredYes, timings);
 			var sessionImage = this.getCurrentSessionImage();
 			this.answers[sessionImage.imageSet.id] = answeredYes;
+			this.timings[sessionImage.imageSet.id] = timings;
 			this.next();
 		}
 	}, {
 		key: 'done',
 		value: function done() {
-			this.props.done(this.answers);
+			this.props.done(this.answers, this.timings);
 		}
 	}, {
 		key: 'getCurrentImageSrc',
@@ -765,19 +767,23 @@ var TestPhoto = (function (_React$Component) {
 		_this.addTime = _this.addTime.bind(_this);
 		_this.answerYes = _this.answerYes.bind(_this);
 		_this.answerNo = _this.answerNo.bind(_this);
+		_this.getTimings = _this.getTimings.bind(_this);
 
-		// cant setState yet... so have to do a setTimeout 0 here
-		setTimeout(_this.show, 0);
+		setTimeout(_this.show, 0); // TODO: do this a less hacky way
 		return _this;
 	}
 
 	_createClass(TestPhoto, [{
 		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps() {
-			console.log('componentWillReceiveProps');
-			this.setState({ myState: 'loading' });
-			this.setState({ times: { init: new Date() } });
-			setTimeout(this.show, 0);
+		value: function componentWillReceiveProps(nextProps) {
+			// TODO: DRY
+			this.setState({
+				myState: 'loading',
+				times: {
+					init: new Date()
+				}
+			});
+			setTimeout(this.show, 0); // TODO: do this a less hacky way
 		}
 	}, {
 		key: 'componentDidMount',
@@ -796,7 +802,6 @@ var TestPhoto = (function (_React$Component) {
 		value: function show() {
 			this.setState({ myState: 'show' });
 			this.addTime('show');
-			this.forceUpdate();
 			setTimeout(this.noise, 400);
 		}
 	}, {
@@ -804,7 +809,6 @@ var TestPhoto = (function (_React$Component) {
 		value: function noise() {
 			this.setState({ myState: 'noise' });
 			this.addTime('noise');
-			this.forceUpdate();
 			setTimeout(this.answer, 100);
 		}
 	}, {
@@ -812,7 +816,6 @@ var TestPhoto = (function (_React$Component) {
 		value: function answer() {
 			this.setState({ myState: 'answer' });
 			this.addTime('answer');
-			this.forceUpdate();
 
 			console.log('init took: ' + this.getTimeDiff(this.state.times.init, this.state.times.show));
 			console.log('show took: ' + this.getTimeDiff(this.state.times.show, this.state.times.noise));
@@ -831,16 +834,28 @@ var TestPhoto = (function (_React$Component) {
 			return b.getTime() - a.getTime();
 		}
 	}, {
+		key: 'getTimings',
+		value: function getTimings() {
+			return {
+				initialising: this.getTimeDiff(this.state.times.init, this.state.times.show),
+				showing: this.getTimeDiff(this.state.times.init, this.state.times.noise),
+				noising: this.getTimeDiff(this.state.times.noise, this.state.times.answer),
+				answering: this.getTimeDiff(this.state.times.answer, this.state.times.done)
+			};
+		}
+	}, {
 		key: 'answerYes',
 		value: function answerYes() {
 			console.log('yes');
-			this.props.done(true);
+			this.addTime('done');
+			this.props.done(true, this.getTimings());
 		}
 	}, {
 		key: 'answerNo',
 		value: function answerNo() {
 			console.log('no');
-			this.props.done(false);
+			this.addTime('done');
+			this.props.done(false, this.getTimings());
 		}
 	}, {
 		key: 'render',
@@ -995,7 +1010,8 @@ var VisualProcessingTest = (function (_React$Component) {
 						imageSet: imageSetsArr[order[c]],
 						showControl: Math.random() > 0.5, // 50% chance of getting a control, 50% of a test image
 						beforeTestAnswer: null,
-						afterTestAnswer: null
+						afterTestAnswer: null,
+						timings: {}
 					};
 					session.push(o);
 					c++;
@@ -1010,7 +1026,7 @@ var VisualProcessingTest = (function (_React$Component) {
 		}
 	}, {
 		key: '_markSessionAnswers',
-		value: function _markSessionAnswers(whichTest, answers) {
+		value: function _markSessionAnswers(whichTest, answers, timings) {
 			var answerKey;
 			if (whichTest == 'before') {
 				answerKey = 'beforeTestAnswer';
@@ -1022,6 +1038,7 @@ var VisualProcessingTest = (function (_React$Component) {
 			for (var i in session) {
 				var sessionImage = session[i];
 				sessions[this.state.currentSessionIndex][i][answerKey] = answers[sessionImage.imageSet.id];
+				sessions[this.state.currentSessionIndex][i].timings = timings[sessionImage.imageSet.id];
 			}
 			console.log('sessions updated:', sessions);
 			this.setState({ sessions: sessions });
@@ -1059,8 +1076,8 @@ var VisualProcessingTest = (function (_React$Component) {
 		}
 	}, {
 		key: 'beforeBlockDone',
-		value: function beforeBlockDone(answers) {
-			this._markSessionAnswers('before', answers);
+		value: function beforeBlockDone(answers, timings) {
+			this._markSessionAnswers('before', answers, timings);
 			this.setState({ myState: 'prime-instructions' });
 		}
 	}, {
@@ -1080,8 +1097,8 @@ var VisualProcessingTest = (function (_React$Component) {
 		}
 	}, {
 		key: 'afterBlockDone',
-		value: function afterBlockDone(answers) {
-			this._markSessionAnswers('after', answers);
+		value: function afterBlockDone(answers, timings) {
+			this._markSessionAnswers('after', answers, timings);
 			this.nextSession();
 		}
 	}, {
