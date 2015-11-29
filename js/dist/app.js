@@ -22,29 +22,33 @@ var ImageSessionSet = (function (_React$Component) {
 
 		_this.state = {};
 
+		_this.getInitialState = _this.getInitialState.bind(_this);
 		_this.done = _this.done.bind(_this);
 		_this.next = _this.next.bind(_this);
 		_this.hasNext = _this.hasNext.bind(_this);
 		_this.getNextNum = _this.getNextNum.bind(_this);
 		_this.getCurrentSessionImage = _this.getCurrentSessionImage.bind(_this);
 		_this.getCurrentImageIndex = _this.getCurrentImageIndex.bind(_this);
-		_this.getNumStateImages = _this.getNumStateImages.bind(_this);
 
-		// TODO: DRY with update method.
-		_this.state.sessionImages = props.sessionImages;
-		_this.state.currentImageNum = 0;
-		var order = Util.getUniqueRandomNumbers(_this.getNumStateImages(), 0, _this.getNumStateImages() - 1);
-		_this.state.order = order;
+		_this.state = _this.getInitialState(props);
 		return _this;
 	}
 
 	_createClass(ImageSessionSet, [{
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			this.setState({ sessionImages: props.sessionImages });
-			this.setState({ currentImageNum: 0 });
-			var order = Util.getUniqueRandomNumbers(this.getNumStateImages(), 0, this.getNumStateImages() - 1);
-			this.setState({ order: order });
+			this.setState(this.getInitialState(nextProps));
+		}
+	}, {
+		key: 'getInitialState',
+		value: function getInitialState(props) {
+			var numImages = Util.objLength(props.sessionImages);
+			var order = Util.getUniqueRandomNumbers(numImages, 0, numImages - 1);
+			return {
+				sessionImages: props.sessionImages,
+				currentImageNum: 0,
+				order: order
+			};
 		}
 	}, {
 		key: 'done',
@@ -71,7 +75,7 @@ var ImageSessionSet = (function (_React$Component) {
 		key: 'hasNext',
 		value: function hasNext() {
 			var nextNum = this.getNextNum();
-			var numImages = this.getNumStateImages();
+			var numImages = Util.objLength(this.state.sessionImages);
 			return nextNum < numImages;
 		}
 	}, {
@@ -88,11 +92,6 @@ var ImageSessionSet = (function (_React$Component) {
 		key: 'getCurrentImageIndex',
 		value: function getCurrentImageIndex() {
 			return this.state.order[this.state.currentImageNum];
-		}
-	}, {
-		key: 'getNumStateImages',
-		value: function getNumStateImages() {
-			return Util.objLength(this.state.sessionImages);
 		}
 	}]);
 
@@ -677,6 +676,8 @@ var Util = (function () {
 
 	_createClass(Util, null, [{
 		key: "getUniqueRandomNumbers",
+
+		// TODO: this is incredibly inefficient, find a better way of getting these numbers
 		value: function getUniqueRandomNumbers(num, min, max) {
 			var arr = [];
 			while (arr.length < num) {
@@ -733,7 +734,7 @@ var VisualProcessingTest = (function (_React$Component) {
 			numSessions: 4
 		};
 
-		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'loadingDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
+		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
 		for (var i in reactMethods) {
 			var m = reactMethods[i];
 			_this[m] = _this[m].bind(_this);
@@ -761,12 +762,13 @@ var VisualProcessingTest = (function (_React$Component) {
 			}
 			console.log('imageSetsArr', imageSetsArr);
 			var imageSetsNeeded = this.state.numSessions * this.state.sessionSize;
+			var order = Util.getUniqueRandomNumbers(imageSetsNeeded, 0, imageSetsNeeded - 1);
 			var c = 0;
 			for (var i = 0; i < this.state.numSessions; i++) {
 				var session = [];
 				for (var j = 0; j < this.state.sessionSize; j++) {
 					var o = {
-						imageSet: imageSetsArr[c],
+						imageSet: imageSetsArr[order[c]],
 						showControl: Math.random() > 0.5, // 50% chance of getting a control, 50% of a test image
 						beforeTestAnswer: null,
 						afterTestAnswer: null
@@ -804,6 +806,15 @@ var VisualProcessingTest = (function (_React$Component) {
 		key: 'getCurrentSessionImages',
 		value: function getCurrentSessionImages() {
 			return this.state.sessions[this.state.currentSessionIndex];
+		}
+	}, {
+		key: 'nextSession',
+		value: function nextSession() {
+			var nextSessionIndex = this.state.currentSessionIndex + 1;
+			if (nextSessionIndex >= this.state.numSessions) {} else {
+				this.setState({ currentSessionIndex: nextSessionIndex });
+				this.setState({ myState: 'beforeBlock-instructions' });
+			}
 		}
 	}, {
 		key: 'loadingDone',

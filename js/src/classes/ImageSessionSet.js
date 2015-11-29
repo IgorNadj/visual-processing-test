@@ -9,26 +9,29 @@ class ImageSessionSet extends React.Component {
 		super(props);
 		this.state = {};
 
+		this.getInitialState = this.getInitialState.bind(this);
 		this.done = this.done.bind(this);
 		this.next = this.next.bind(this);
 		this.hasNext = this.hasNext.bind(this);
 		this.getNextNum = this.getNextNum.bind(this);
 		this.getCurrentSessionImage = this.getCurrentSessionImage.bind(this);
 		this.getCurrentImageIndex = this.getCurrentImageIndex.bind(this);
-		this.getNumStateImages = this.getNumStateImages.bind(this);
-
-		// TODO: DRY with update method.
-		this.state.sessionImages = props.sessionImages;
-		this.state.currentImageNum = 0;
-		var order = Util.getUniqueRandomNumbers(this.getNumStateImages(), 0, this.getNumStateImages()-1);
-		this.state.order = order;
+		
+		this.state = this.getInitialState(props);
 	}
 
 	componentWillReceiveProps(nextProps){
-		this.setState({ sessionImages: props.sessionImages });
-		this.setState({ currentImageNum: 0 });
-		var order = Util.getUniqueRandomNumbers(this.getNumStateImages(), 0, this.getNumStateImages()-1);
-		this.setState({ order: order });
+		this.setState(this.getInitialState(nextProps));
+	}
+
+	getInitialState(props){
+		var numImages = Util.objLength(props.sessionImages);
+		var order = Util.getUniqueRandomNumbers(numImages, 0, numImages-1);
+		return {
+			sessionImages: props.sessionImages,
+			currentImageNum: 0,
+			order: order
+		}
 	}
 
 	done(){
@@ -53,7 +56,7 @@ class ImageSessionSet extends React.Component {
 
 	hasNext(){
 		var nextNum = this.getNextNum();
-		var numImages = this.getNumStateImages();
+		var numImages = Util.objLength(this.state.sessionImages);
 		return nextNum < numImages;
 	}
 
@@ -67,10 +70,6 @@ class ImageSessionSet extends React.Component {
 
 	getCurrentImageIndex(){
 		return this.state.order[this.state.currentImageNum]; 
-	}
-
-	getNumStateImages(){
-		return Util.objLength(this.state.sessionImages)
 	}
 
 }
