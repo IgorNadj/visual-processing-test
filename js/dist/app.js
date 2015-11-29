@@ -156,44 +156,204 @@ var Instructions = (function (_React$Component) {
 	_createClass(Instructions, [{
 		key: 'render',
 		value: function render() {
+			console.log('instructions', this.props);
+
+			var progressContent = React.createElement(
+				'div',
+				null,
+				'Session ',
+				this.props.sessionNum,
+				' / ',
+				this.props.numSessions
+			);
+
 			var content = null;
-			if (this.props.myState == 'beforeBlock-instructions') {
+			var startButtonLabel = 'Start';
+			if (this.props.myState == 'first-instructions') {
+				// first instruction, special
+				startButtonLabel = 'Continue';
+
 				content = React.createElement(
 					'div',
 					null,
 					React.createElement(
-						'p',
+						'h1',
 						null,
-						'This test consists of three parts.'
+						'Visual Processing Test'
 					),
 					React.createElement(
-						'ol',
+						'h2',
+						null,
+						'Introduction'
+					),
+					React.createElement(
+						'p',
+						null,
+						'This test is aimed at testing your top-down visual processing ability, and should take around 10 minutes to complete.'
+					),
+					React.createElement(
+						'h2',
+						null,
+						'What to expect'
+					),
+					React.createElement(
+						'p',
+						null,
+						'There are ',
+						this.props.numSessions,
+						' sessions, and each session is broken up into three parts.'
+					),
+					React.createElement(
+						'h3',
+						null,
+						'Part 1. Before'
+					),
+					React.createElement(
+						'p',
+						null,
+						'A black and white image will flash in front of your eyes, very briefly, and you will then be asked if you saw a person or not. Don\'t worry if you find it difficuilt to answer, it\'s supposed to be. Then you will see the next image and be asked again, this will repeat ',
+						this.props.sessionSize,
+						' times.'
+					),
+					React.createElement('img', { src: 'res/images/example-test.png' }),
+					React.createElement(
+						'h3',
+						null,
+						'Part 2. Priming'
+					),
+					React.createElement(
+						'p',
+						null,
+						'The original images will be shown to you for 2 seconds each.'
+					),
+					React.createElement('img', { src: 'res/images/example-template.png' }),
+					React.createElement(
+						'h3',
+						null,
+						'Part 3. After'
+					),
+					React.createElement(
+						'p',
+						null,
+						'You will then again be shown the black and white images and asked the same question.'
+					),
+					React.createElement('img', { src: 'res/images/example-test.png' }),
+					React.createElement(
+						'h2',
+						null,
+						'Background'
+					),
+					React.createElement(
+						'p',
+						null,
+						'This test is a ',
+						React.createElement(
+							'em',
+							null,
+							'limited'
+						),
+						' reproduction of ',
+						React.createElement(
+							'a',
+							{ href: 'http://www.pnas.org/content/112/43/13401.abstract', target: '_blank' },
+							'a recent study'
+						),
+						' testing a hypothesis on the nature of hallucinations.'
+					),
+					React.createElement(
+						'p',
+						null,
+						'Very briefly, it attempts to explain hallucinations and related symptoms as a normal brain function (top-down visual processing) which is a little out of tune.'
+					),
+					React.createElement(
+						'p',
+						null,
+						'Steven Novella of The Skeptics Guide to the Universe has a ',
+						React.createElement(
+							'a',
+							{ href: 'http://theness.com/neurologicablog/index.php/the-nature-of-hallucinations/', target: '_blank' },
+							'much better write up'
+						),
+						', and was the inspiration for this project.'
+					),
+					React.createElement(
+						'h3',
+						null,
+						'Limitations'
+					),
+					React.createElement(
+						'ul',
 						null,
 						React.createElement(
 							'li',
 							null,
-							'Test'
+							'The original study had 160 template images, which allowed for 16 sessions. This study only has 40 template images, allowing for 4 sessions. This means that resulting data will be much less accurate, and should not be taken seriously.'
 						),
 						React.createElement(
 							'li',
 							null,
-							'Priming'
+							'The original study had a warmup session, this test has none (apart from the above instructions).'
 						),
 						React.createElement(
 							'li',
 							null,
-							'Test'
+							'The original study had a human supervisor, this test is done online without help.'
+						),
+						React.createElement(
+							'li',
+							null,
+							'I am not a scientist, and may have made mistakes in understanding the experimental method or the analysis.'
 						)
 					),
 					React.createElement(
-						'p',
+						'h3',
 						null,
-						'This first test involves quick flashes of 10 black and white images, and asks you to answer a simple question.'
+						'Project Links'
 					),
 					React.createElement(
 						'p',
 						null,
-						'Prepare to pay attention and click start.'
+						'The source code is available here:'
+					),
+					React.createElement(
+						'ul',
+						null,
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								'a',
+								{ href: 'https://github.com/IgorNadj/visual-processing-test', target: '_blank' },
+								'Project on github'
+							)
+						)
+					),
+					React.createElement(
+						'h2',
+						null,
+						'Early Access: Data Gathering'
+					),
+					React.createElement(
+						'p',
+						null,
+						'Due to the nature of the study (comparing your performance to the average performance), at least 30 data points are needed before analysis can be done. Therefore, this tool cannot give you your results immediatelly, but instead you will be asked to provide (optionally) an email address at the end, and I will email you your results.'
+					)
+				);
+			}
+			if (this.props.myState == 'beforeBlock-instructions') {
+				content = React.createElement(
+					'div',
+					null,
+					progressContent,
+					React.createElement(
+						'h2',
+						null,
+						'Part 1. Before'
+					),
+					React.createElement(
+						'p',
+						null,
+						'A black and white image will be shown very briefly, and you will be asked to answer whether you saw a person or not.'
 					)
 				);
 			}
@@ -201,20 +361,16 @@ var Instructions = (function (_React$Component) {
 				content = React.createElement(
 					'div',
 					null,
+					progressContent,
 					React.createElement(
-						'p',
+						'h2',
 						null,
-						'First test done.'
+						'Part 2. Priming'
 					),
 					React.createElement(
 						'p',
 						null,
-						'Next you will see the colour images which were used to generate the black and white images.'
-					),
-					React.createElement(
-						'p',
-						null,
-						'Watch carefully, they will appear briefly, and without pause.'
+						'The colour images will be displayed for two seconds each.'
 					)
 				);
 			}
@@ -222,36 +378,37 @@ var Instructions = (function (_React$Component) {
 				content = React.createElement(
 					'div',
 					null,
+					progressContent,
 					React.createElement(
-						'p',
+						'h2',
 						null,
-						'Once again, you will see quick flashes of 10 black and white images, and will be asked to answer a simple question.'
+						'Part 3. After'
 					),
 					React.createElement(
 						'p',
 						null,
-						'Prepare to pay attention and click start.'
+						'A black and white image will be shown very briefly, and you will be asked to answer whether you saw a person or not.'
 					)
 				);
 			}
 
+			var style = { padding: '3em' };
 			return React.createElement(
 				'div',
-				{ style: { padding: '3em' } },
-				React.createElement(
-					'h2',
-					null,
-					'Instructions'
-				),
+				{ style: style },
 				React.createElement(
 					'div',
 					null,
 					content
 				),
 				React.createElement(
-					'a',
-					{ href: '#', onClick: this.props.start },
-					'Start'
+					'p',
+					{ style: { padding: '2em', textAlign: 'center' } },
+					React.createElement(
+						'a',
+						{ href: '#', onClick: this.props.start, style: { padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' } },
+						startButtonLabel
+					)
 				)
 			);
 		}
@@ -771,7 +928,7 @@ var VisualProcessingTest = (function (_React$Component) {
 			numSessions: 4
 		};
 
-		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
+		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
 		for (var i in reactMethods) {
 			var m = reactMethods[i];
 			_this[m] = _this[m].bind(_this);
@@ -858,6 +1015,11 @@ var VisualProcessingTest = (function (_React$Component) {
 	}, {
 		key: 'loadingDone',
 		value: function loadingDone() {
+			this.setState({ myState: 'first-instructions' });
+		}
+	}, {
+		key: 'firstInstructionDone',
+		value: function firstInstructionDone() {
 			this.setState({ myState: 'beforeBlock-instructions' });
 		}
 	}, {
@@ -906,12 +1068,13 @@ var VisualProcessingTest = (function (_React$Component) {
 			if (s == 'loading') {
 				inner = React.createElement(Loading, null);
 			}
-			if (s == 'beforeBlock-instructions' || s == 'prime-instructions' || s == 'afterBlock-instructions') {
+			if (s == 'first-instructions' || s == 'beforeBlock-instructions' || s == 'prime-instructions' || s == 'afterBlock-instructions') {
 				var onStart;
+				if (s == 'first-instructions') onStart = this.firstInstructionDone;
 				if (s == 'beforeBlock-instructions') onStart = this.beforeBlockStart;
 				if (s == 'prime-instructions') onStart = this.primeStart;
 				if (s == 'afterBlock-instructions') onStart = this.afterBlockStart;
-				inner = React.createElement(Instructions, { myState: s, start: onStart });
+				inner = React.createElement(Instructions, { myState: s, start: onStart, sessionNum: this.state.currentSessionIndex + 1, numSessions: this.state.numSessions, sessionSize: this.state.sessionSize });
 			}
 			if (s == 'allSessionsDone') {
 				inner = React.createElement(Done, null);
@@ -925,9 +1088,11 @@ var VisualProcessingTest = (function (_React$Component) {
 			if (s == 'prime') {
 				return React.createElement(Prime, { sessionImages: this.getCurrentSessionImages(), done: this.primeDone });
 			}
+
+			var style = { width: '800px', height: '600px', background: 'white', overflow: 'scroll' };
 			return React.createElement(
 				'div',
-				{ style: { width: '800px', height: '600px', background: 'white' } },
+				{ style: style },
 				inner
 			);
 		}

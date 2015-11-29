@@ -13,7 +13,7 @@ class VisualProcessingTest extends React.Component {
 	    	numSessions: 4
 	    };
 
-	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
+	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
 	    for(var i in reactMethods){
 	    	var m = reactMethods[i];
 	    	this[m] = this[m].bind(this);
@@ -95,6 +95,9 @@ class VisualProcessingTest extends React.Component {
 	
 
 	loadingDone(){
+		this.setState({ myState: 'first-instructions' });
+	}
+	firstInstructionDone(){
 		this.setState({ myState: 'beforeBlock-instructions' });
 	}
 	beforeBlockStart(){
@@ -128,12 +131,13 @@ class VisualProcessingTest extends React.Component {
     	if(s == 'loading'){
     		inner = <Loading />;
     	}
-    	if(s == 'beforeBlock-instructions' || s == 'prime-instructions' || s == 'afterBlock-instructions'){
+    	if(s == 'first-instructions' || s == 'beforeBlock-instructions' || s == 'prime-instructions' || s == 'afterBlock-instructions'){
     		var onStart;
+    		if(s == 'first-instructions')       onStart = this.firstInstructionDone;
     		if(s == 'beforeBlock-instructions') onStart = this.beforeBlockStart;
 			if(s == 'prime-instructions')       onStart = this.primeStart;
     		if(s == 'afterBlock-instructions')  onStart = this.afterBlockStart;
-    		inner = <Instructions myState={s} start={onStart} />
+    		inner = <Instructions myState={s} start={onStart} sessionNum={this.state.currentSessionIndex+1} numSessions={this.state.numSessions} sessionSize={this.state.sessionSize} />
     	}
     	if(s == 'allSessionsDone'){
     		inner = <Done />
@@ -147,7 +151,9 @@ class VisualProcessingTest extends React.Component {
     	if(s == 'prime'){
     		return <Prime sessionImages={this.getCurrentSessionImages()} done={this.primeDone} />
     	}
-        return <div style={{ width: '800px', height: '600px', background: 'white' }}>
+
+    	var style = { width: '800px', height: '600px', background: 'white', overflow: 'scroll' };
+        return <div style={style}>
         	{inner}
         </div>
     }
