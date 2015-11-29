@@ -9,8 +9,8 @@ class VisualProcessingTest extends React.Component {
 	    	res: props.res, 
 	    	sessions: [],
 	    	currentSessionIndex: 0,
-	    	sessionSize: 3,
-	    	numSessions: 1
+	    	sessionSize: 10,
+	    	numSessions: 4
 	    };
 
 	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
