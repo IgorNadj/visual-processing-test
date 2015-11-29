@@ -10,10 +10,10 @@ class VisualProcessingTest extends React.Component {
 	    	sessions: [],
 	    	currentSessionIndex: 0,
 	    	sessionSize: 3,
-	    	numSessions: 4
+	    	numSessions: 1
 	    };
 
-	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
+	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
 	    for(var i in reactMethods){
 	    	var m = reactMethods[i];
 	    	this[m] = this[m].bind(this);
@@ -92,7 +92,12 @@ class VisualProcessingTest extends React.Component {
 			this.setState({ currentSessionIndex: nextSessionIndex });
 			this.setState({ myState: 'beforeBlock-instructions' });
 		}
+	}
 
+	submitData(emailAddress){
+		console.log('submitData', emailAddress);
+		// TODO: submit
+		this.setState({ myState: 'thanks' });
 	}
 	
 
@@ -142,6 +147,9 @@ class VisualProcessingTest extends React.Component {
     		inner = <Instructions myState={s} start={onStart} sessionNum={this.state.currentSessionIndex+1} numSessions={this.state.numSessions} sessionSize={this.state.sessionSize} />
     	}
     	if(s == 'allSessionsDone'){
+    		inner = <CollectEmail submit={this.submitData} />
+    	}
+    	if(s == 'thanks'){
     		inner = <Done />
     	}
     	if(s == 'beforeBlock' || s == 'afterBlock'){

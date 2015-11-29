@@ -8,6 +8,92 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var CollectEmail = (function (_React$Component) {
+	_inherits(CollectEmail, _React$Component);
+
+	function CollectEmail(props) {
+		_classCallCheck(this, CollectEmail);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CollectEmail).call(this, props));
+
+		_this.setEmailAddress = _this.setEmailAddress.bind(_this);
+		_this.submitEmail = _this.submitEmail.bind(_this);
+		return _this;
+	}
+
+	_createClass(CollectEmail, [{
+		key: 'setEmailAddress',
+		value: function setEmailAddress(e) {
+			this.emailAddress = e.target.value;
+			console.log('set email address: ', this.emailAddress);
+		}
+	}, {
+		key: 'submitEmail',
+		value: function submitEmail() {
+			console.log('submitEmail', this.emailAddress);
+			this.props.submit(this.emailAddress);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return React.createElement(
+				'div',
+				{ style: { padding: '3em' } },
+				React.createElement(
+					'h2',
+					null,
+					'Done'
+				),
+				React.createElement(
+					'p',
+					null,
+					'Thanks!'
+				),
+				React.createElement(
+					'div',
+					null,
+					React.createElement(
+						'h3',
+						null,
+						'Early Access: Data Gathering'
+					),
+					React.createElement(
+						'p',
+						null,
+						'Due to the nature of the study (comparing your performance to the average performance), at least 30 data points are needed before analysis can be done. Therefore, this tool cannot give you your results immediatelly, but instead you will be asked to provide (optionally) an email address at the end, and I will email you your results.'
+					)
+				),
+				React.createElement(
+					'div',
+					null,
+					React.createElement(
+						'label',
+						null,
+						'Email Address'
+					),
+					React.createElement('input', { type: 'text', onChange: this.setEmailAddress, placeholder: '(optional)' })
+				),
+				React.createElement(
+					'div',
+					null,
+					React.createElement('input', { type: 'submit', onClick: this.submitEmail })
+				)
+			);
+		}
+	}]);
+
+	return CollectEmail;
+})(React.Component);
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var Done = (function (_React$Component) {
 	_inherits(Done, _React$Component);
 
@@ -28,7 +114,11 @@ var Done = (function (_React$Component) {
 					null,
 					'Done'
 				),
-				'Thanks'
+				React.createElement(
+					'p',
+					null,
+					'Thanks!'
+				)
 			);
 		}
 	}]);
@@ -970,10 +1060,10 @@ var VisualProcessingTest = (function (_React$Component) {
 			sessions: [],
 			currentSessionIndex: 0,
 			sessionSize: 3,
-			numSessions: 4
+			numSessions: 1
 		};
 
-		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone'];
+		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
 		for (var i in reactMethods) {
 			var m = reactMethods[i];
 			_this[m] = _this[m].bind(_this);
@@ -1060,6 +1150,13 @@ var VisualProcessingTest = (function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'submitData',
+		value: function submitData(emailAddress) {
+			console.log('submitData', emailAddress);
+			// TODO: submit
+			this.setState({ myState: 'thanks' });
+		}
+	}, {
 		key: 'loadingDone',
 		value: function loadingDone() {
 			this.setState({ myState: 'first-instructions' });
@@ -1124,6 +1221,9 @@ var VisualProcessingTest = (function (_React$Component) {
 				inner = React.createElement(Instructions, { myState: s, start: onStart, sessionNum: this.state.currentSessionIndex + 1, numSessions: this.state.numSessions, sessionSize: this.state.sessionSize });
 			}
 			if (s == 'allSessionsDone') {
+				inner = React.createElement(CollectEmail, { submit: this.submitData });
+			}
+			if (s == 'thanks') {
 				inner = React.createElement(Done, null);
 			}
 			if (s == 'beforeBlock' || s == 'afterBlock') {
