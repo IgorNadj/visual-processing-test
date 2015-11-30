@@ -96,7 +96,12 @@ class VisualProcessingTest extends React.Component {
 
 	submitData(emailAddress){
 		console.log('submitData', emailAddress);
-		// TODO: submit
+		
+		this.props.db.push({
+			emailAddress: emailAddress,
+			data: this.state.sessions
+		});
+
 		this.setState({ myState: 'thanks' });
 	}
 	

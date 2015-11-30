@@ -1153,7 +1153,12 @@ var VisualProcessingTest = (function (_React$Component) {
 		key: 'submitData',
 		value: function submitData(emailAddress) {
 			console.log('submitData', emailAddress);
-			// TODO: submit
+
+			this.props.db.push({
+				emailAddress: emailAddress,
+				data: this.state.sessions
+			});
+
 			this.setState({ myState: 'thanks' });
 		}
 	}, {
@@ -1252,5 +1257,6 @@ var VisualProcessingTest = (function (_React$Component) {
 'use strict';
 
 var res = new Resources(window.VPT_IMAGES);
+var db = new Firebase('https://amber-torch-480.firebaseio.com/');
 
-ReactDOM.render(React.createElement(VisualProcessingTest, { res: res }), document.getElementById('app'));
+ReactDOM.render(React.createElement(VisualProcessingTest, { res: res, db: db }), document.getElementById('app'));
