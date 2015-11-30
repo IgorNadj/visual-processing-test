@@ -500,6 +500,26 @@ var Instructions = (function (_React$Component) {
 				);
 			}
 
+			var hasStart = this.props.loadingPercent == 1;
+			var start = '';
+			var loadingProgress = '';
+			if (hasStart) {
+				start = React.createElement(
+					'a',
+					{ href: '#', onClick: this.start, style: { padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' } },
+					startButtonLabel
+				);
+			} else {
+				var percentRounded = Math.round(this.props.loadingPercent * 100);
+				loadingProgress = React.createElement(
+					'span',
+					null,
+					'Loading... ',
+					percentRounded,
+					'%'
+				);
+			}
+
 			var style = { padding: '3em' };
 			return React.createElement(
 				'div',
@@ -512,11 +532,8 @@ var Instructions = (function (_React$Component) {
 				React.createElement(
 					'p',
 					{ style: { padding: '2em', textAlign: 'center' } },
-					React.createElement(
-						'a',
-						{ href: '#', onClick: this.start, style: { padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' } },
-						startButtonLabel
-					)
+					loadingProgress,
+					start
 				)
 			);
 		}
@@ -670,7 +687,7 @@ var Resources = (function () {
 
 	}, {
 		key: 'load',
-		value: function load(callback) {
+		value: function load(doneCallback, updateCallback) {
 			var self = this;
 
 			var loadQueue = [];
@@ -694,15 +711,22 @@ var Resources = (function () {
 
 			var onAllLoaded = function onAllLoaded() {
 				console.log('all loaded');
-				callback();
+				doneCallback();
 			};
+
+			var _totalToLoad = loadQueue.length;
 
 			var loadNext = function loadNext() {
 				console.log('loadnext');
+
 				if (loadQueue.length === 0) {
 					onAllLoaded();
 					return;
 				}
+
+				var _percent = (_totalToLoad - loadQueue.length) / _totalToLoad;
+				updateCallback(_percent);
+
 				var url = loadQueue.pop();
 				var image = new Image();
 				image.onload = loadNext;
@@ -1055,7 +1079,8 @@ var VisualProcessingTest = (function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VisualProcessingTest).call(this, props));
 
 		_this.state = {
-			myState: 'loading',
+			myState: 'first-instructions',
+			loadingPercent: 0,
 			res: props.res,
 			sessions: [],
 			currentSessionIndex: 0,
@@ -1063,7 +1088,7 @@ var VisualProcessingTest = (function (_React$Component) {
 			numSessions: 4
 		};
 
-		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
+		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'loadingUpdate', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
 		for (var i in reactMethods) {
 			var m = reactMethods[i];
 			_this[m] = _this[m].bind(_this);
@@ -1112,7 +1137,7 @@ var VisualProcessingTest = (function (_React$Component) {
 			console.log('sessions', sessions);
 
 			// load images
-			this.state.res.load(this.loadingDone);
+			this.state.res.load(this.loadingDone, this.loadingUpdate);
 		}
 	}, {
 		key: '_markSessionAnswers',
@@ -1162,9 +1187,14 @@ var VisualProcessingTest = (function (_React$Component) {
 			this.setState({ myState: 'thanks' });
 		}
 	}, {
+		key: 'loadingUpdate',
+		value: function loadingUpdate(percent) {
+			this.setState({ loadingPercent: percent });
+		}
+	}, {
 		key: 'loadingDone',
 		value: function loadingDone() {
-			this.setState({ myState: 'first-instructions' });
+			this.setState({ loadingPercent: 1 });
 		}
 	}, {
 		key: 'firstInstructionDone',
@@ -1214,16 +1244,13 @@ var VisualProcessingTest = (function (_React$Component) {
 			var s = this.state.myState;
 
 			var inner = null;
-			if (s == 'loading') {
-				inner = React.createElement(Loading, null);
-			}
 			if (s == 'first-instructions' || s == 'beforeBlock-instructions' || s == 'prime-instructions' || s == 'afterBlock-instructions') {
 				var onStart;
 				if (s == 'first-instructions') onStart = this.firstInstructionDone;
 				if (s == 'beforeBlock-instructions') onStart = this.beforeBlockStart;
 				if (s == 'prime-instructions') onStart = this.primeStart;
 				if (s == 'afterBlock-instructions') onStart = this.afterBlockStart;
-				inner = React.createElement(Instructions, { myState: s, start: onStart, sessionNum: this.state.currentSessionIndex + 1, numSessions: this.state.numSessions, sessionSize: this.state.sessionSize });
+				inner = React.createElement(Instructions, { myState: s, start: onStart, sessionNum: this.state.currentSessionIndex + 1, numSessions: this.state.numSessions, sessionSize: this.state.sessionSize, loadingPercent: this.state.loadingPercent });
 			}
 			if (s == 'allSessionsDone') {
 				inner = React.createElement(CollectEmail, { submit: this.submitData });

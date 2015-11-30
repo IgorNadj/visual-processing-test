@@ -105,13 +105,24 @@ class Instructions extends React.Component {
 			</div>
 		}
 
+		var hasStart = this.props.loadingPercent == 1;
+		var start = '';
+		var loadingProgress = '';
+		if(hasStart){
+			start = <a href="#" onClick={this.start} style={{ padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' }}>{ startButtonLabel }</a>
+		}else{
+			var percentRounded = Math.round(this.props.loadingPercent * 100);
+			loadingProgress = <span>Loading... { percentRounded }%</span>
+		}
+
 		var style = { padding: '3em' };
 		return <div style={style}>
 			<div>
 				{ content }
 			</div>
 			<p style={{ padding: '2em', textAlign: 'center' }}>
-				<a href="#" onClick={this.start} style={{ padding: '0.5em 1em', border: '1px solid #aaa', textDecoration: 'none' }}>{ startButtonLabel }</a>
+				{ loadingProgress }
+				{ start }
 			</p>
 		</div> 
 	}

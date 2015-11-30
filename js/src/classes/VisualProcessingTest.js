@@ -5,7 +5,8 @@ class VisualProcessingTest extends React.Component {
 	constructor(props){
 	    super(props);
 	    this.state = { 
-	    	myState: 'loading', 
+	    	myState: 'first-instructions',
+	    	loadingPercent: 0, 
 	    	res: props.res, 
 	    	sessions: [],
 	    	currentSessionIndex: 0,
@@ -13,7 +14,7 @@ class VisualProcessingTest extends React.Component {
 	    	numSessions: 4
 	    };
 
-	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
+	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'loadingUpdate', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
 	    for(var i in reactMethods){
 	    	var m = reactMethods[i];
 	    	this[m] = this[m].bind(this);
@@ -59,7 +60,7 @@ class VisualProcessingTest extends React.Component {
 		console.log('sessions', sessions);
 
 		// load images
-		this.state.res.load(this.loadingDone);
+		this.state.res.load(this.loadingDone, this.loadingUpdate);
 	}
 
 	_markSessionAnswers(whichTest, answers, timings){
@@ -105,10 +106,13 @@ class VisualProcessingTest extends React.Component {
 		this.setState({ myState: 'thanks' });
 	}
 	
-
-	loadingDone(){
-		this.setState({ myState: 'first-instructions' });
+	loadingUpdate(percent){
+		this.setState({ loadingPercent: percent });
 	}
+	loadingDone(){
+		this.setState({ loadingPercent: 1 });
+	}
+
 	firstInstructionDone(){
 		this.setState({ myState: 'beforeBlock-instructions' });
 	}
@@ -140,16 +144,13 @@ class VisualProcessingTest extends React.Component {
     	var s = this.state.myState;
 
     	var inner = null;
-    	if(s == 'loading'){
-    		inner = <Loading />;
-    	}
     	if(s == 'first-instructions' || s == 'beforeBlock-instructions' || s == 'prime-instructions' || s == 'afterBlock-instructions'){
     		var onStart;
     		if(s == 'first-instructions')       onStart = this.firstInstructionDone;
     		if(s == 'beforeBlock-instructions') onStart = this.beforeBlockStart;
 			if(s == 'prime-instructions')       onStart = this.primeStart;
     		if(s == 'afterBlock-instructions')  onStart = this.afterBlockStart;
-    		inner = <Instructions myState={s} start={onStart} sessionNum={this.state.currentSessionIndex+1} numSessions={this.state.numSessions} sessionSize={this.state.sessionSize} />
+    		inner = <Instructions myState={s} start={onStart} sessionNum={this.state.currentSessionIndex+1} numSessions={this.state.numSessions} sessionSize={this.state.sessionSize} loadingPercent={this.state.loadingPercent} />
     	}
     	if(s == 'allSessionsDone'){
     		inner = <CollectEmail submit={this.submitData} />

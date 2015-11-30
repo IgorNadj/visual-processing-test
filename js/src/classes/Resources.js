@@ -32,7 +32,7 @@ class Resources {
 	/**
 	  * @return void
 	  */
-	load(callback){
+	load(doneCallback, updateCallback){
 		var self = this;
 
 		var loadQueue = [];
@@ -56,15 +56,22 @@ class Resources {
 
 		var onAllLoaded = function(){
 			console.log('all loaded');
-			callback();
+			doneCallback();
 		};
+
+		var _totalToLoad = loadQueue.length;
 
 		var loadNext = function(){
 			console.log('loadnext');
+
 			if(loadQueue.length === 0){
 				onAllLoaded();
 				return;
 			}
+
+			var _percent = (_totalToLoad - loadQueue.length) / _totalToLoad;
+			updateCallback(_percent);
+
 			var url = loadQueue.pop();
 			var image = new Image();
 			image.onload = loadNext;
