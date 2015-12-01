@@ -74,7 +74,15 @@ class Resources {
 
 			var url = loadQueue.pop();
 			var image = new Image();
-			image.onload = loadNext;
+			
+			// image.onload = loadNext; doesnt work, need to check for complete
+			var interval = setInterval(function(){
+				if (img.complete){
+					clearInterval(interval);
+					loadNext();
+				}
+			}, 200);
+
 			image.src = url;
 		};
 
