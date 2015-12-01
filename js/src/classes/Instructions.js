@@ -16,6 +16,7 @@ class Instructions extends React.Component {
 	}
 
 	start(){
+		if(this.props.loadingPercent != 1) return; // in case of keypress, dont start until loaded
 		this.props.start();
 	}
 	
