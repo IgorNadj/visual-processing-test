@@ -77,7 +77,7 @@ class Resources {
 			
 			// image.onload = loadNext; doesnt work, need to check for complete
 			var interval = setInterval(function(){
-				if (img.complete){
+				if (image.complete){
 					clearInterval(interval);
 					loadNext();
 				}
