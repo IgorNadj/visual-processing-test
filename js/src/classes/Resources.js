@@ -1,3 +1,4 @@
+window.keepImageObjects = []; // attempt to prevent loading issues, store ref so it doesnt get GC
 
 
 class Resources {
@@ -5,7 +6,6 @@ class Resources {
 	constructor(res){
 		this.noise = null;
 		this.items = this._getItemsFromRes(res);	
-		this.imageObjects = [];
 	}
 
 	getImageTypes(){
@@ -75,7 +75,7 @@ class Resources {
 
 			var url = loadQueue.pop();
 			var image = new Image();
-			this.imageObjects.push(image); // attempt to prevent loading issues, store ref so it doesnt get GC
+			window.keepImageObjects.push(image); 
 			
 			// image.onload = loadNext; doesnt work? need to check for complete
 			var interval = setInterval(function(){

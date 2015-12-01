@@ -259,6 +259,7 @@ var Instructions = (function (_React$Component) {
 	}, {
 		key: 'start',
 		value: function start() {
+			if (this.props.loadingPercent != 1) return; // in case of keypress, dont start until loaded
 			this.props.start();
 		}
 	}, {
@@ -642,13 +643,14 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+window.keepImageObjects = []; // attempt to prevent loading issues, store ref so it doesnt get GC
+
 var Resources = (function () {
 	function Resources(res) {
 		_classCallCheck(this, Resources);
 
 		this.noise = null;
 		this.items = this._getItemsFromRes(res);
-		this.imageObjects = [];
 	}
 
 	_createClass(Resources, [{
@@ -730,7 +732,7 @@ var Resources = (function () {
 
 				var url = loadQueue.pop();
 				var image = new Image();
-				this.imageObjects.push(image); // attempt to prevent loading issues, store ref so it doesnt get GC
+				window.keepImageObjects.push(image);
 
 				// image.onload = loadNext; doesnt work? need to check for complete
 				var interval = setInterval(function () {
