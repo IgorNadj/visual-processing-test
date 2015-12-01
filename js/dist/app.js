@@ -648,6 +648,7 @@ var Resources = (function () {
 
 		this.noise = null;
 		this.items = this._getItemsFromRes(res);
+		this.imageObjects = [];
 	}
 
 	_createClass(Resources, [{
@@ -729,8 +730,9 @@ var Resources = (function () {
 
 				var url = loadQueue.pop();
 				var image = new Image();
+				this.imageObjects.push(image); // attempt to prevent loading issues, store ref so it doesnt get GC
 
-				// image.onload = loadNext; doesnt work, need to check for complete
+				// image.onload = loadNext; doesnt work? need to check for complete
 				var interval = setInterval(function () {
 					if (image.complete) {
 						clearInterval(interval);
