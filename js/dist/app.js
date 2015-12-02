@@ -521,7 +521,7 @@ var Instructions = (function (_React$Component) {
 				);
 			}
 
-			var style = { padding: '3em' };
+			var style = { width: '700px', height: '500px', padding: '50px', overflow: 'scroll' };
 			return React.createElement(
 				'div',
 				{ style: style },
@@ -1280,7 +1280,7 @@ var VisualProcessingTest = (function (_React$Component) {
 				return React.createElement(Prime, { sessionImages: this.getCurrentSessionImages(), done: this.primeDone });
 			}
 
-			var style = { width: '800px', height: '600px', background: 'white', overflow: 'scroll' };
+			var style = { width: '800px', height: '600px', background: 'white' };
 			return React.createElement(
 				'div',
 				{ style: style },

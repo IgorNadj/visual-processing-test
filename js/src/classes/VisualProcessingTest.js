@@ -168,7 +168,7 @@ class VisualProcessingTest extends React.Component {
     		return <Prime sessionImages={this.getCurrentSessionImages()} done={this.primeDone} />
     	}
 
-    	var style = { width: '800px', height: '600px', background: 'white', overflow: 'scroll' };
+    	var style = { width: '800px', height: '600px', background: 'white' };
         return <div style={style}>
         	{inner}
         </div>

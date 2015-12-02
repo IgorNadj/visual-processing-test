@@ -76,7 +76,7 @@ class Instructions extends React.Component {
 				</ul>
 
 				<h2>Early Access: Data Gathering</h2>
-				<p>Due to the nature of the study (comparing your performance to the average performance), at least 30 data points are needed before analysis can be done. Therefore, this tool cannot give you your results immediatelly, but instead you will be asked to provide (optionally) an email address at the end, and I will email you your results.</p> 
+				<p>Due to the nature of the study (comparing your performance to the average performance), at least 30 data points are needed before analysis can be done. Therefore, this tool cannot give you your results immediately, but instead you will be asked to provide (optionally) an email address at the end, and I will email you your results.</p> 
 
 			</div>
 		}
@@ -116,7 +116,7 @@ class Instructions extends React.Component {
 			loadingProgress = <span>Loading... { percentRounded }%</span>
 		}
 
-		var style = { padding: '3em' };
+		var style = { width: '700px', height: '500px', padding: '50px', overflow: 'scroll' };
 		return <div style={style}>
 			<div>
 				{ content }
