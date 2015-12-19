@@ -36,6 +36,12 @@ class Resources {
 	load(doneCallback, updateCallback){
 		var self = this;
 
+		var onAllLoaded = function(){
+			console.log('all loaded');
+			doneCallback();
+		};
+
+
 		var loadQueue = [];
 
 		// images
@@ -46,49 +52,44 @@ class Resources {
 			for(var t in types){
 				var type = types[t];
 				var url = item[type];
-				loadQueue.push(url);
+				loadQueue.push({ url: url });
 			}
 		}
 
 		// noise
-		loadQueue.push(this.getNoiseUrl());
-
+		loadQueue.push({ url: this.getNoiseUrl() });
 		console.log('loadQueue', loadQueue);
-
-		var onAllLoaded = function(){
-			console.log('all loaded');
-			doneCallback();
-		};
-
+		
+		// start them off
+		for(var i in loadQueue){
+			var o = loadQueue[i];
+			var image = new Image();
+			image.src = o.url;
+			window.keepImageObjects.push(image); // see above
+			loadQueue[i].image = image;
+		}
+		
+		// progress		
 		var _totalToLoad = loadQueue.length;
+		var _numLoaded = 0;
 
-		var loadNext = function(){
-			console.log('loadnext');
-
-			if(loadQueue.length === 0){
-				onAllLoaded();
-				return;
+		var interval = setInterval(function(){
+			_numLoaded = 0;
+			for(var i in loadQueue){
+				var image = loadQueue[i].image;
+				// image.onload = loadNext; doesnt work? need to check for complete
+				if (image.complete){
+					_numLoaded++;
+					var _percent = _numLoaded / _totalToLoad;
+					updateCallback(_percent);	
+				}	
 			}
 
-			var _percent = (_totalToLoad - loadQueue.length) / _totalToLoad;
-			updateCallback(_percent);
-
-			var url = loadQueue.pop();
-			var image = new Image();
-			window.keepImageObjects.push(image); 
-			
-			// image.onload = loadNext; doesnt work? need to check for complete
-			var interval = setInterval(function(){
-				if (image.complete){
-					clearInterval(interval);
-					loadNext();
-				}
-			}, 200);
-
-			image.src = url;
-		};
-
-		loadNext();
+			if(_numLoaded == _totalToLoad){
+				clearInterval(interval);
+				onAllLoaded();
+			}
+		}, 200);
 	}
 	
 	// res format: {123456: { template: 'a.jpg', test: 'b.jpg', control: 'c.jpg' }}
