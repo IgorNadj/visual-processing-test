@@ -109,42 +109,6 @@ class Resources {
 		return res;
 	}
 
-
-
-	// _loadResources(res){
-	
-	// }
-
-	// getRandomImageSubset(res, num){
-	// 	var subset = {
-	// 		templates: {
-	// 			people: [],
-	// 			animals: []
-	// 		},
-	// 		stimuli: {
-	// 			people: [],
-	// 			animals: []
-	// 		}
-	// 	};
-	// 	var categories = this.getImageCategories();
-	// 	for(var i in categories){
-	// 		var category = categories[i];
-	// 		var randomIndices = Util.getUniqueRandomNumbers(num, 0, res.templates[category].length - 1);
-	// 		for(var j in randomIndices){
-	// 			var randomIndex = randomIndices[j];
-	// 			subset.templates[category].push(res.templates[category][randomIndex]);
-	// 			subset.stimuli[category].push(res.stimuli[category][randomIndex]);
-	// 		}
-	// 	}
-
-	// 	console.log('subset', subset);
-
-	// 	return subset;
-	// }
-
-
-	
-
 }
 
 
