@@ -38,13 +38,13 @@ $(function(){
 								numHit: 0,
 								numMiss: 0,
 								numFalseAlarm: 0,
-								numTrueAlarm: 0
+								numCorrectRejection: 0
 							},
 							after: {
 								numHit: 0,
 								numMiss: 0,
 								numFalseAlarm: 0,
-								numTrueAlarm: 0
+								numCorrectRejection: 0
 							}
 						};
 					}
@@ -58,13 +58,13 @@ $(function(){
 								numHit: 0,
 								numMiss: 0,
 								numFalseAlarm: 0,
-								numTrueAlarm: 0
+								numCorrectRejection: 0
 							},
 							after: {
 								numHit: 0,
 								numMiss: 0,
 								numFalseAlarm: 0,
-								numTrueAlarm: 0
+								numCorrectRejection: 0
 							}
 						}
 					}
@@ -87,19 +87,23 @@ $(function(){
 						var isHit;
 						var isMiss;
 						var isFalseAlarm;
-						var isTrueAlarm;
+						var isCorrectRejection;
 						var answer = entrySessionImage[beforeAfter+'TestAnswer'];
 						
 						if(usedControl){
 							isHit = false;
 							isMiss = false;
 							isFalseAlarm = answer == true;
-							isTrueAlarm = answer == false;
+							isCorrectRejection = answer == false;
 						}else{
-							isHit = isPerson && answer == true;
-							isMiss = isPerson && answer == false;
+							// - Person shown and "I see a person" = Hit
+							// - Person shown and "I do not see a person" = Miss
+							// - Animal shown and "I see a person" = Miss
+							// - Animal shown and "I do not see a person" = Hit
+							isHit = (isPerson && answer == true) || (!isPerson && answer == false);
+							isMiss = (isPerson && answer == false) || (!isPerson && answer == true);
 							isFalseAlarm = false;
-							isTrueAlarm = false;
+							isCorrectRejection = false;
 						}
 						if(isHit){
 							resultsByImage[imageId][beforeAfter].numHit++;
@@ -113,9 +117,9 @@ $(function(){
 							resultsByImage[imageId][beforeAfter].numFalseAlarm++;
 							resultsBySubmission[submissionKey][beforeAfter].numFalseAlarm++;
 						}
-						if(isTrueAlarm){
-							resultsByImage[imageId][beforeAfter].numTrueAlarm++;
-							resultsBySubmission[submissionKey][beforeAfter].numTrueAlarm++;
+						if(isCorrectRejection){
+							resultsByImage[imageId][beforeAfter].numCorrectRejection++;
+							resultsBySubmission[submissionKey][beforeAfter].numCorrectRejection++;
 						}
 					}
 				}
@@ -188,7 +192,7 @@ $(function(){
 				var beforeAfter = BEFORE_AFTER_SET[j];
 				var data = resultsBySubmission[submissionKey][beforeAfter];
 				var hitRate = data.numHit / (data.numHit + data.numMiss);
-				var falseAlarmRate = data.numFalseAlarm / (data.numFalseAlarm + data.numTrueAlarm);
+				var falseAlarmRate = data.numFalseAlarm / (data.numFalseAlarm + data.numCorrectRejection);
 				resultsBySubmission[submissionKey][beforeAfter].hitRate = hitRate;
 				resultsBySubmission[submissionKey][beforeAfter].falseAlarmRate = falseAlarmRate;
 				// resultsBySubmission[submissionKey][beforeAfter].discriminationSensitivy = null;
@@ -282,22 +286,21 @@ $(function(){
 		var submissionKeys = Object.keys(info.resultsBySubmission);
 		for(var i in submissionKeys){
 			var submissionKey = submissionKeys[i];
-			var perc = Math.round(info.resultsBySubmission[submissionKey].performanceBenefit * 100);
 			var isMyDataPoint = submissionKey == mySubmissionKey;
 			if(isMyDataPoint){
-				performanceBenefitChartData.push([submissionKey, null, perc]);
+				performanceBenefitChartData.push([submissionKey, null, info.resultsBySubmission[submissionKey].performanceBenefit]);
 			}else{
-				performanceBenefitChartData.push([submissionKey, perc, null]);
+				performanceBenefitChartData.push([submissionKey, info.resultsBySubmission[submissionKey].performanceBenefit, null]);
 			}
 		}
 
 		var performanceBenefitChartOptions = {
-			title: 'Performance benefit from prior knowledge (%)',
+			title: 'Performance benefit from prior knowledge',
       		legend: { 
       			position: 'none' 
       		},
       		histogram: {
-      			bucketSize: 5,
+      			bucketSize: 0.05,
       		},
       		isStacked: true,
       		colors: ['#5CA5B9', 'orange']
