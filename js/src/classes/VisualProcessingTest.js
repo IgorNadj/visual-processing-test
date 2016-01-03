@@ -11,7 +11,8 @@ class VisualProcessingTest extends React.Component {
 	    	sessions: [],
 	    	currentSessionIndex: 0,
 	    	sessionSize: 10,
-	    	numSessions: 4
+	    	numSessions: 4,
+	    	earlyAccess: false
 	    };
 
 	    var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'loadingUpdate', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
@@ -98,11 +99,18 @@ class VisualProcessingTest extends React.Component {
 	submitData(emailAddress){
 		console.log('submitData', emailAddress);
 		
-		this.props.db.push({
-			emailAddress: emailAddress,
+		var payload = {
 			data: this.state.sessions
-		});
+		}
+		if(emailAddress){
+			payload.emailAddress = emailAddress;
+		}
+		
+		var dbResponse = this.props.db.push(payload);
+		var resultsKey = dbResponse.key(); 
+		console.log('resultsKey', resultsKey);
 
+		this.setState({ resultsKey: resultsKey });
 		this.setState({ myState: 'thanks' });
 	}
 	
@@ -137,7 +145,11 @@ class VisualProcessingTest extends React.Component {
 		this.nextSession();
 	}
 	allSessionsDone(){
-		this.setState({ myState: 'allSessionsDone' });
+		if(this.state.earlyAccess){
+			this.setState({ myState: 'allSessionsDone' });
+		}else{
+			this.submitData();
+		}
 	}
 
     render(){
@@ -150,13 +162,21 @@ class VisualProcessingTest extends React.Component {
     		if(s == 'beforeBlock-instructions') onStart = this.beforeBlockStart;
 			if(s == 'prime-instructions')       onStart = this.primeStart;
     		if(s == 'afterBlock-instructions')  onStart = this.afterBlockStart;
-    		inner = <Instructions myState={s} start={onStart} sessionNum={this.state.currentSessionIndex+1} numSessions={this.state.numSessions} sessionSize={this.state.sessionSize} loadingPercent={this.state.loadingPercent} />
+    		inner = <Instructions myState={s} start={onStart} sessionNum={this.state.currentSessionIndex+1} numSessions={this.state.numSessions} sessionSize={this.state.sessionSize} loadingPercent={this.state.loadingPercent} earlyAccess={this.state.earlyAccess} />
     	}
     	if(s == 'allSessionsDone'){
-    		inner = <CollectEmail submit={this.submitData} />
+    		if(this.state.earlyAccess){
+    			inner = <CollectEmail submit={this.submitData} />
+    		}else{
+    			// we should have skipped to thanks
+    		}
     	}
     	if(s == 'thanks'){
-    		inner = <Done />
+			if(this.state.earlyAccess){
+				inner = <Done />
+			}else{
+    			inner = <Done resultsKey={this.state.resultsKey} />
+    		}
     	}
     	if(s == 'beforeBlock' || s == 'afterBlock'){
     		var onDone;

@@ -6,10 +6,9 @@ var BEFORE_AFTER_SET = ['before', 'after'];
 // load 
 $(function(){
 
-	var AUTH_KEY = (new URI(window.location.href)).search(true).auth; // TODO: change how we do this
 	var mySubmissionKey = (new URI(window.location.href)).search(true).key;
 
-	var jsonUrl = DB_URL + '.json?auth=' + AUTH_KEY;
+	var jsonUrl = DB_URL + '.json';
 	$.get(jsonUrl, function(data){
 		console.log('loaded ', data);
 		var info = analyse(data);

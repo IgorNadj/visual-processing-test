@@ -106,6 +106,31 @@ var Done = (function (_React$Component) {
 	_createClass(Done, [{
 		key: 'render',
 		value: function render() {
+			var inner = null;
+			if (this.props.resultsKey) {
+				var resultsUrl = 'results?key=' + this.props.resultsKey;
+				inner = React.createElement(
+					'div',
+					null,
+					React.createElement(
+						'a',
+						{ href: resultsUrl },
+						'View Results'
+					),
+					'.'
+				);
+			} else {
+				inner = React.createElement(
+					'div',
+					null,
+					React.createElement(
+						'p',
+						null,
+						'Thanks!'
+					)
+				);
+			}
+
 			return React.createElement(
 				'div',
 				{ style: { padding: '3em' } },
@@ -114,11 +139,7 @@ var Done = (function (_React$Component) {
 					null,
 					'Done'
 				),
-				React.createElement(
-					'p',
-					null,
-					'Thanks!'
-				)
+				inner
 			);
 		}
 	}]);
@@ -282,6 +303,45 @@ var Instructions = (function (_React$Component) {
 				// first instruction, special
 				startButtonLabel = 'Continue';
 
+				var resultsContent = null;
+				if (this.props.earlyAccess) {
+					resultsContent = React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'h2',
+							null,
+							'Early Access: Data Gathering'
+						),
+						React.createElement(
+							'p',
+							null,
+							'Due to the nature of the study (comparing your performance to the average performance), at least 30 data points are needed before analysis can be done. Therefore, this tool cannot give you your results immediately, but instead you will be asked to provide (optionally) an email address at the end, and I will email you your results.'
+						)
+					);
+				} else {
+					resultsContent = React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'h3',
+							null,
+							'Results'
+						),
+						React.createElement(
+							'p',
+							null,
+							'Once you have completed this test, you will see your individual results. Otherwise, the ',
+							React.createElement(
+								'a',
+								{ href: 'results' },
+								'results page'
+							),
+							' lists overall results and conclusions.'
+						)
+					);
+				}
+
 				content = React.createElement(
 					'div',
 					null,
@@ -422,31 +482,14 @@ var Instructions = (function (_React$Component) {
 					React.createElement(
 						'p',
 						null,
-						'The source code is available here:'
-					),
-					React.createElement(
-						'ul',
-						null,
+						'The source code is available here: ',
 						React.createElement(
-							'li',
-							null,
-							React.createElement(
-								'a',
-								{ href: 'https://github.com/IgorNadj/visual-processing-test', target: '_blank' },
-								'Project on github'
-							)
+							'a',
+							{ href: 'https://github.com/IgorNadj/visual-processing-test', target: '_blank' },
+							'Project on github'
 						)
 					),
-					React.createElement(
-						'h2',
-						null,
-						'Early Access: Data Gathering'
-					),
-					React.createElement(
-						'p',
-						null,
-						'Due to the nature of the study (comparing your performance to the average performance), at least 30 data points are needed before analysis can be done. Therefore, this tool cannot give you your results immediately, but instead you will be asked to provide (optionally) an email address at the end, and I will email you your results.'
-					)
+					resultsContent
 				);
 			}
 			if (this.props.myState == 'beforeBlock-instructions') {
@@ -767,38 +810,6 @@ var Resources = (function () {
 			}
 			return res;
 		}
-
-		// _loadResources(res){
-
-		// }
-
-		// getRandomImageSubset(res, num){
-		// 	var subset = {
-		// 		templates: {
-		// 			people: [],
-		// 			animals: []
-		// 		},
-		// 		stimuli: {
-		// 			people: [],
-		// 			animals: []
-		// 		}
-		// 	};
-		// 	var categories = this.getImageCategories();
-		// 	for(var i in categories){
-		// 		var category = categories[i];
-		// 		var randomIndices = Util.getUniqueRandomNumbers(num, 0, res.templates[category].length - 1);
-		// 		for(var j in randomIndices){
-		// 			var randomIndex = randomIndices[j];
-		// 			subset.templates[category].push(res.templates[category][randomIndex]);
-		// 			subset.stimuli[category].push(res.stimuli[category][randomIndex]);
-		// 		}
-		// 	}
-
-		// 	console.log('subset', subset);
-
-		// 	return subset;
-		// }
-
 	}]);
 
 	return Resources;
@@ -1097,7 +1108,8 @@ var VisualProcessingTest = (function (_React$Component) {
 			sessions: [],
 			currentSessionIndex: 0,
 			sessionSize: 10,
-			numSessions: 4
+			numSessions: 4,
+			earlyAccess: false
 		};
 
 		var reactMethods = ['_init', '_markSessionAnswers', 'getCurrentSessionImages', 'nextSession', 'loadingDone', 'loadingUpdate', 'firstInstructionDone', 'beforeBlockStart', 'beforeBlockDone', 'primeStart', 'primeDone', 'afterBlockStart', 'afterBlockDone', 'submitData'];
@@ -1191,11 +1203,18 @@ var VisualProcessingTest = (function (_React$Component) {
 		value: function submitData(emailAddress) {
 			console.log('submitData', emailAddress);
 
-			this.props.db.push({
-				emailAddress: emailAddress,
+			var payload = {
 				data: this.state.sessions
-			});
+			};
+			if (emailAddress) {
+				payload.emailAddress = emailAddress;
+			}
 
+			var dbResponse = this.props.db.push(payload);
+			var resultsKey = dbResponse.key();
+			console.log('resultsKey', resultsKey);
+
+			this.setState({ resultsKey: resultsKey });
 			this.setState({ myState: 'thanks' });
 		}
 	}, {
@@ -1248,7 +1267,11 @@ var VisualProcessingTest = (function (_React$Component) {
 	}, {
 		key: 'allSessionsDone',
 		value: function allSessionsDone() {
-			this.setState({ myState: 'allSessionsDone' });
+			if (this.state.earlyAccess) {
+				this.setState({ myState: 'allSessionsDone' });
+			} else {
+				this.submitData();
+			}
 		}
 	}, {
 		key: 'render',
@@ -1262,13 +1285,21 @@ var VisualProcessingTest = (function (_React$Component) {
 				if (s == 'beforeBlock-instructions') onStart = this.beforeBlockStart;
 				if (s == 'prime-instructions') onStart = this.primeStart;
 				if (s == 'afterBlock-instructions') onStart = this.afterBlockStart;
-				inner = React.createElement(Instructions, { myState: s, start: onStart, sessionNum: this.state.currentSessionIndex + 1, numSessions: this.state.numSessions, sessionSize: this.state.sessionSize, loadingPercent: this.state.loadingPercent });
+				inner = React.createElement(Instructions, { myState: s, start: onStart, sessionNum: this.state.currentSessionIndex + 1, numSessions: this.state.numSessions, sessionSize: this.state.sessionSize, loadingPercent: this.state.loadingPercent, earlyAccess: this.state.earlyAccess });
 			}
 			if (s == 'allSessionsDone') {
-				inner = React.createElement(CollectEmail, { submit: this.submitData });
+				if (this.state.earlyAccess) {
+					inner = React.createElement(CollectEmail, { submit: this.submitData });
+				} else {
+					// we should have skipped to thanks
+				}
 			}
 			if (s == 'thanks') {
-				inner = React.createElement(Done, null);
+				if (this.state.earlyAccess) {
+					inner = React.createElement(Done, null);
+				} else {
+					inner = React.createElement(Done, { resultsKey: this.state.resultsKey });
+				}
 			}
 			if (s == 'beforeBlock' || s == 'afterBlock') {
 				var onDone;

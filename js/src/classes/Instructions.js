@@ -34,6 +34,19 @@ class Instructions extends React.Component {
 			// first instruction, special
 			startButtonLabel = 'Continue';
 
+			var resultsContent = null;
+			if(this.props.earlyAccess){
+				resultsContent = <div>
+					<h2>Early Access: Data Gathering</h2>
+					<p>Due to the nature of the study (comparing your performance to the average performance), at least 30 data points are needed before analysis can be done. Therefore, this tool cannot give you your results immediately, but instead you will be asked to provide (optionally) an email address at the end, and I will email you your results.</p> 
+				</div>
+			}else{
+				resultsContent = <div>
+					<h3>Results</h3>
+					<p>Once you have completed this test, you will see your individual results. Otherwise, the <a href="results">results page</a> lists overall results and conclusions.</p>
+				</div>
+			}
+
 			content = <div>
 				<h1>Visual Processing Test</h1>
 
@@ -70,14 +83,10 @@ class Instructions extends React.Component {
 				</ul>
 
 				<h3>Project Links</h3>
-				<p>The source code is available here:</p>
-				<ul>
-					<li><a href="https://github.com/IgorNadj/visual-processing-test" target="_blank">Project on github</a></li>
-				</ul>
+				<p>The source code is available here: <a href="https://github.com/IgorNadj/visual-processing-test" target="_blank">Project on github</a></p>
 
-				<h2>Early Access: Data Gathering</h2>
-				<p>Due to the nature of the study (comparing your performance to the average performance), at least 30 data points are needed before analysis can be done. Therefore, this tool cannot give you your results immediately, but instead you will be asked to provide (optionally) an email address at the end, and I will email you your results.</p> 
-
+				{ resultsContent }
+				
 			</div>
 		}
 		if(this.props.myState == 'beforeBlock-instructions'){
