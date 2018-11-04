@@ -50,6 +50,11 @@ class Instructions extends React.Component {
 			content = <div>
 				<h1>Visual Processing Test</h1>
 
+				<hr/>
+				<p><strong>Note: this test is closed</strong></p>
+				<p>The test is left up for posterity, but you will not be able to submit your results. Session size is reduced to 1 session of 5 photos which should take about a minute.</p>
+				<hr/>
+
 				<h2>Introduction</h2>
 				<p>This test is aimed at testing your top-down visual processing ability, and should take around 10 minutes to complete.</p>
 				
