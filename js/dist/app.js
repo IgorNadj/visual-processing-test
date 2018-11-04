@@ -1,6 +1,6 @@
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8,13 +8,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var CollectEmail = (function (_React$Component) {
+var CollectEmail = function (_React$Component) {
 	_inherits(CollectEmail, _React$Component);
 
 	function CollectEmail(props) {
 		_classCallCheck(this, CollectEmail);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CollectEmail).call(this, props));
+		var _this = _possibleConstructorReturn(this, (CollectEmail.__proto__ || Object.getPrototypeOf(CollectEmail)).call(this, props));
 
 		_this.setEmailAddress = _this.setEmailAddress.bind(_this);
 		_this.submitEmail = _this.submitEmail.bind(_this);
@@ -83,10 +83,10 @@ var CollectEmail = (function (_React$Component) {
 	}]);
 
 	return CollectEmail;
-})(React.Component);
+}(React.Component);
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -94,13 +94,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Done = (function (_React$Component) {
+var Done = function (_React$Component) {
 	_inherits(Done, _React$Component);
 
 	function Done() {
 		_classCallCheck(this, Done);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Done).apply(this, arguments));
+		return _possibleConstructorReturn(this, (Done.__proto__ || Object.getPrototypeOf(Done)).apply(this, arguments));
 	}
 
 	_createClass(Done, [{
@@ -108,7 +108,7 @@ var Done = (function (_React$Component) {
 		value: function render() {
 			var inner = null;
 			if (this.props.resultsKey) {
-				var resultsUrl = 'results?key=' + this.props.resultsKey;
+				var resultsUrl = 'results'; // ?key='+this.props.resultsKey';
 				inner = React.createElement(
 					'div',
 					null,
@@ -145,10 +145,10 @@ var Done = (function (_React$Component) {
 	}]);
 
 	return Done;
-})(React.Component);
+}(React.Component);
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -159,14 +159,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /**
   * An ImageSessionSet is a common base class for dealing with sessionImages
   */
-
-var ImageSessionSet = (function (_React$Component) {
+var ImageSessionSet = function (_React$Component) {
 	_inherits(ImageSessionSet, _React$Component);
 
 	function ImageSessionSet(props) {
 		_classCallCheck(this, ImageSessionSet);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ImageSessionSet).call(this, props));
+		var _this = _possibleConstructorReturn(this, (ImageSessionSet.__proto__ || Object.getPrototypeOf(ImageSessionSet)).call(this, props));
 
 		_this.state = {};
 
@@ -244,10 +243,10 @@ var ImageSessionSet = (function (_React$Component) {
 	}]);
 
 	return ImageSessionSet;
-})(React.Component);
+}(React.Component);
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -255,13 +254,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Instructions = (function (_React$Component) {
+var Instructions = function (_React$Component) {
 	_inherits(Instructions, _React$Component);
 
 	function Instructions(props) {
 		_classCallCheck(this, Instructions);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Instructions).call(this, props));
+		var _this = _possibleConstructorReturn(this, (Instructions.__proto__ || Object.getPrototypeOf(Instructions)).call(this, props));
 
 		_this.start = _this.start.bind(_this);
 		return _this;
@@ -350,6 +349,22 @@ var Instructions = (function (_React$Component) {
 						null,
 						'Visual Processing Test'
 					),
+					React.createElement('hr', null),
+					React.createElement(
+						'p',
+						null,
+						React.createElement(
+							'strong',
+							null,
+							'Note: this test is closed'
+						)
+					),
+					React.createElement(
+						'p',
+						null,
+						'The test is left up for posterity, but you will not be able to submit your results. Session size is reduced to 1 session of 5 photos which should take about a minute.'
+					),
+					React.createElement('hr', null),
 					React.createElement(
 						'h2',
 						null,
@@ -584,10 +599,10 @@ var Instructions = (function (_React$Component) {
 	}]);
 
 	return Instructions;
-})(React.Component);
+}(React.Component);
 "use strict";
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -595,13 +610,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Loading = (function (_React$Component) {
+var Loading = function (_React$Component) {
 	_inherits(Loading, _React$Component);
 
 	function Loading() {
 		_classCallCheck(this, Loading);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Loading).apply(this, arguments));
+		return _possibleConstructorReturn(this, (Loading.__proto__ || Object.getPrototypeOf(Loading)).apply(this, arguments));
 	}
 
 	_createClass(Loading, [{
@@ -616,10 +631,10 @@ var Loading = (function (_React$Component) {
 	}]);
 
 	return Loading;
-})(React.Component);
+}(React.Component);
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -627,13 +642,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Prime = (function (_ImageSessionSet) {
+var Prime = function (_ImageSessionSet) {
 	_inherits(Prime, _ImageSessionSet);
 
 	function Prime(props) {
 		_classCallCheck(this, Prime);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Prime).call(this, props));
+		var _this = _possibleConstructorReturn(this, (Prime.__proto__ || Object.getPrototypeOf(Prime)).call(this, props));
 
 		_this.getCurrentImageSrc = _this.getCurrentImageSrc.bind(_this);
 		_this.start = _this.start.bind(_this);
@@ -678,17 +693,18 @@ var Prime = (function (_ImageSessionSet) {
 	}]);
 
 	return Prime;
-})(ImageSessionSet);
+}(ImageSessionSet);
 "use strict";
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 window.keepImageObjects = []; // attempt to prevent loading issues, store ref so it doesnt get GC
 
-var Resources = (function () {
+
+var Resources = function () {
 	function Resources(res) {
 		_classCallCheck(this, Resources);
 
@@ -813,10 +829,10 @@ var Resources = (function () {
 	}]);
 
 	return Resources;
-})();
+}();
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -824,13 +840,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Test = (function (_ImageSessionSet) {
+var Test = function (_ImageSessionSet) {
 	_inherits(Test, _ImageSessionSet);
 
 	function Test(props) {
 		_classCallCheck(this, Test);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Test).call(this, props));
+		var _this = _possibleConstructorReturn(this, (Test.__proto__ || Object.getPrototypeOf(Test)).call(this, props));
 
 		_this.answers = {};
 		_this.timings = {};
@@ -872,10 +888,10 @@ var Test = (function (_ImageSessionSet) {
 	}]);
 
 	return Test;
-})(ImageSessionSet);
+}(ImageSessionSet);
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -883,13 +899,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var TestPhoto = (function (_React$Component) {
+var TestPhoto = function (_React$Component) {
 	_inherits(TestPhoto, _React$Component);
 
 	function TestPhoto(props) {
 		_classCallCheck(this, TestPhoto);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TestPhoto).call(this, props));
+		var _this = _possibleConstructorReturn(this, (TestPhoto.__proto__ || Object.getPrototypeOf(TestPhoto)).call(this, props));
 
 		_this.state = {
 			myState: 'loading',
@@ -1038,20 +1054,21 @@ var TestPhoto = (function (_React$Component) {
 	}]);
 
 	return TestPhoto;
-})(React.Component);
+}(React.Component);
 "use strict";
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Util = (function () {
+var Util = function () {
 	function Util() {
 		_classCallCheck(this, Util);
 	}
 
 	_createClass(Util, null, [{
 		key: "getUniqueRandomNumbers",
+
 
 		// TODO: this is incredibly inefficient, find a better way of getting these numbers
 		value: function getUniqueRandomNumbers(num, min, max) {
@@ -1082,10 +1099,10 @@ var Util = (function () {
 	}]);
 
 	return Util;
-})();
+}();
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1093,13 +1110,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var VisualProcessingTest = (function (_React$Component) {
+var VisualProcessingTest = function (_React$Component) {
 	_inherits(VisualProcessingTest, _React$Component);
 
 	function VisualProcessingTest(props) {
 		_classCallCheck(this, VisualProcessingTest);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VisualProcessingTest).call(this, props));
+		var _this = _possibleConstructorReturn(this, (VisualProcessingTest.__proto__ || Object.getPrototypeOf(VisualProcessingTest)).call(this, props));
 
 		_this.state = {
 			myState: 'first-instructions',
@@ -1107,8 +1124,8 @@ var VisualProcessingTest = (function (_React$Component) {
 			res: props.res,
 			sessions: [],
 			currentSessionIndex: 0,
-			sessionSize: 10,
-			numSessions: 4,
+			sessionSize: 5,
+			numSessions: 1,
 			earlyAccess: false
 		};
 
@@ -1321,7 +1338,7 @@ var VisualProcessingTest = (function (_React$Component) {
 	}]);
 
 	return VisualProcessingTest;
-})(React.Component);
+}(React.Component);
 
 ;
 'use strict';
