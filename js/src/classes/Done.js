@@ -5,7 +5,7 @@ class Done extends React.Component {
 	render(){
 		var inner = null;
 		if(this.props.resultsKey){
-			var resultsUrl = 'results?key='+this.props.resultsKey;
+			var resultsUrl = 'results'; // ?key='+this.props.resultsKey';
 			inner = <div>
 				<a href={ resultsUrl }>View Results</a>.
 			</div>
