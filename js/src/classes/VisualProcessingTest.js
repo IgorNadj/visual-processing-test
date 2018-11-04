@@ -10,8 +10,8 @@ class VisualProcessingTest extends React.Component {
 	    	res: props.res, 
 	    	sessions: [],
 	    	currentSessionIndex: 0,
-	    	sessionSize: 10,
-	    	numSessions: 4,
+	    	sessionSize: 5,
+	    	numSessions: 1,
 	    	earlyAccess: false
 	    };
 
